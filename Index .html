@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aqua Pro — Bleuenn & Louan</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif;background:#f4f6f8;color:#1a1a1a;font-size:15px;line-height:1.6}
+.app-header{background:#fff;border-bottom:1px solid #e0e0e0;padding:14px 24px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100;flex-wrap:wrap}
+.app-title{font-size:18px;font-weight:700;color:#0F6E56}
+.app-subtitle{font-size:13px;color:#888}
+.main-nav{display:flex;gap:4px;margin-left:auto;flex-wrap:wrap}
+.main-btn{padding:8px 16px;border:1px solid #ddd;border-radius:8px;font-size:13px;cursor:pointer;background:#f8f8f8;color:#555;font-weight:500;transition:all .15s;font-family:inherit}
+.main-btn.active{background:#0F6E56;color:#fff;border-color:#0F6E56}
+.main-btn:hover:not(.active){background:#e8f5f0;border-color:#0F6E56;color:#0F6E56}
+.doc-panel{display:none;padding:20px 24px}
+.doc-panel.active{display:block}
+.sub-nav{display:flex;gap:0;border-bottom:2px solid #e8e8e8;margin-bottom:20px;overflow-x:auto}
+.sub-tab{padding:10px 18px;font-size:13px;cursor:pointer;color:#888;border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap;transition:all .15s;background:none;border-top:none;border-left:none;border-right:none;font-family:inherit}
+.sub-tab.active{color:#0F6E56;font-weight:600;border-bottom-color:#0F6E56}
+.sub-tab:hover:not(.active){color:#333}
+.section-toggle{display:flex;gap:8px;margin-bottom:16px}
+.toggle-btn{padding:7px 16px;font-size:13px;border:1px solid #ddd;border-radius:20px;cursor:pointer;background:#fff;color:#888;transition:all .15s;font-family:inherit}
+.toggle-btn.active{background:#0F6E56;color:#fff;border-color:#0F6E56;font-weight:500}
+.section{display:none}
+.section.active{display:block}
+h2.sh{font-size:17px;font-weight:700;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid #eee}
+.tip{font-size:13px;background:#e8f5f0;color:#0F6E56;border-radius:8px;padding:10px 14px;margin-bottom:14px;border-left:3px solid #0F6E56}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.info-card{background:#fff;border:1px solid #e8e8e8;border-radius:10px;padding:14px 16px}
+.info-card h3{font-size:11px;font-weight:700;color:#0F6E56;margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em}
+.info-card p,.info-card li{font-size:13px;color:#555;line-height:1.7}
+.info-card ul{padding-left:16px}
+.info-card li{margin-bottom:2px}
+.badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:10px;font-weight:500;margin-right:4px;margin-bottom:4px}
+.b-age{background:#e8f5f0;color:#0F6E56}.b-obj{background:#e6f1fb;color:#185FA5}.b-mat{background:#faeeda;color:#854F0B}
+.exo-card{border:1px solid #e8e8e8;border-radius:10px;padding:14px 16px;margin-bottom:10px;background:#fff;transition:border-color .15s}
+.exo-card:hover{border-color:#0F6E56}
+.exo-header{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px}
+.exo-title{font-size:14px;font-weight:600}
+.exo-cat{font-size:11px;padding:2px 8px;border-radius:10px;white-space:nowrap;font-weight:500}
+.cat-deco{background:#e8f5f0;color:#0F6E56}.cat-tech{background:#e6f1fb;color:#185FA5}.cat-endo{background:#faeeda;color:#854F0B}
+.cat-vit{background:#faece7;color:#993C1D}.cat-coord{background:#eeedfe;color:#534AB7}.cat-chauf{background:#f1efe8;color:#5F5E5A}
+.cat-cardio{background:#faece7;color:#993C1D}.cat-haut{background:#e6f1fb;color:#185FA5}.cat-bas{background:#e8f5f0;color:#0F6E56}
+.cat-abdo{background:#faeeda;color:#854F0B}.cat-etir{background:#eeedfe;color:#534AB7}.cat-relax{background:#fbeaf0;color:#993556}
+.exo-desc{font-size:13px;color:#555;margin-bottom:8px}
+.variables{font-size:12px;background:#f8f8f8;padding:8px 10px;border-radius:6px;color:#444;border-left:2px solid #0F6E56}
+.variables strong{color:#0F6E56}
+.consignes{font-size:12px;background:#f0f6ff;padding:8px 10px;border-radius:6px;color:#444;margin-bottom:6px;border-left:2px solid #185FA5}
+.consignes strong{color:#185FA5}
+.cat-label{font-size:12px;color:#aaa;margin:14px 0 8px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding-left:2px}
+/* PLANNING */
+.planning-container{overflow-x:auto}
+.plan-header{display:grid;grid-template-columns:110px repeat(7,1fr);gap:3px;margin-bottom:3px}
+.ph-day{font-size:11px;font-weight:700;text-align:center;padding:6px 2px;color:#555;background:#f0f0f0;border-radius:4px}
+.ph-label{font-size:11px;color:#888;display:flex;align-items:center;padding:0 4px}
+.person-row-label{display:grid;grid-template-columns:110px repeat(7,1fr);gap:3px;margin-bottom:3px;align-items:start}
+.pr-tag{font-size:10px;font-weight:700;padding:4px 6px;border-radius:6px;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.3}
+.pr-b{background:#dbeafe;color:#1d4ed8}.pr-l{background:#fce7f3;color:#9d174d}
+.day-cell{border:1px solid #e0e0e0;border-radius:8px;padding:6px;background:#fff;min-height:36px;display:flex;flex-direction:column;gap:2px}
+.day-cell:focus-within{border-color:#0F6E56;box-shadow:0 0 0 2px rgba(15,110,86,.08)}
+.cell-section{font-size:9px;font-weight:700;color:#bbb;text-transform:uppercase;letter-spacing:.04em;margin-top:3px}
+.cell-section:first-child{margin-top:0}
+.cell-input{width:100%;border:none;background:transparent;font-size:11px;color:#333;font-family:inherit;resize:none;line-height:1.4;outline:none;min-height:18px}
+.cell-input::placeholder{color:#ddd}
+.cell-input:focus{color:#0F6E56}
+.work-input{background:#f0faf6;border-radius:4px;padding:3px 6px;font-size:11px;color:#0F6E56;font-weight:600;border:none;width:100%;font-family:inherit;outline:none}
+.work-input::placeholder{color:#aaddc8}
+.work-input-l{background:#fdf0f7;color:#9d174d}
+.meal-input{background:#fffbf0;border-radius:4px;padding:3px 6px;font-size:11px;color:#854F0B;border:none;width:100%;font-family:inherit;outline:none}
+.meal-input::placeholder{color:#e0c898}
+.week-nav{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.wnav-btn{padding:6px 14px;border:1px solid #ddd;border-radius:8px;background:#fff;cursor:pointer;font-size:13px;color:#555;font-family:inherit;transition:all .15s}
+.wnav-btn:hover{border-color:#0F6E56;color:#0F6E56}
+.week-label{font-size:14px;font-weight:700;color:#0F6E56}
+/* BILAN & COURSES */
+.bilan-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+.bilan-card{background:#fff;border:1px solid #e8e8e8;border-radius:10px;padding:14px 16px}
+.bilan-title{font-size:13px;font-weight:700;margin-bottom:10px;color:#333}
+.stat-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #f0f0f0;font-size:13px}
+.stat-row:last-child{border-bottom:none}
+.courses-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px}
+.course-item{display:flex;align-items:center;gap:8px;padding:6px 10px;border:1px solid #e8e8e8;border-radius:8px;font-size:13px;background:#fff;cursor:pointer;transition:border-color .15s}
+.course-item:hover{border-color:#0F6E56}
+.course-item.checked{opacity:.45;text-decoration:line-through}
+.add-row{display:flex;gap:8px;margin-top:8px}
+.add-input{flex:1;border:1px solid #ddd;border-radius:8px;padding:7px 12px;font-size:13px;font-family:inherit;outline:none}
+.add-input:focus{border-color:#0F6E56}
+.add-btn{padding:7px 14px;background:#0F6E56;color:#fff;border:none;border-radius:8px;font-size:13px;cursor:pointer;font-family:inherit}
+.notes-area{width:100%;border:1px solid #e0e0e0;border-radius:8px;padding:10px 12px;font-size:13px;font-family:inherit;background:#fff;color:#333;resize:vertical;min-height:80px;outline:none;line-height:1.6}
+.notes-area:focus{border-color:#0F6E56}
+/* FICHES */
+.fiche-eleve{border:1px solid #e8e8e8;border-radius:10px;overflow:hidden;margin-bottom:12px;background:#fff}
+.fiche-header{background:#f8f8f8;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #eee}
+.fiche-body{padding:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fiche-field label{font-size:11px;color:#888;display:block;margin-bottom:3px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.fiche-field input,.fiche-field select,.fiche-field textarea{width:100%;border:1px solid #e0e0e0;border-radius:6px;padding:6px 10px;font-size:13px;font-family:inherit;background:#fff;color:#333;outline:none}
+.fiche-field input:focus,.fiche-field select:focus,.fiche-field textarea:focus{border-color:#0F6E56}
+.fiche-field textarea{resize:vertical;min-height:55px}
+.fiche-field.full{grid-column:1/-1}
+/* PLAYLIST */
+.pl-section h4{font-size:11px;font-weight:700;color:#0F6E56;text-transform:uppercase;letter-spacing:.05em;margin:14px 0 6px;padding-bottom:4px;border-bottom:1px solid #f0f0f0}
+.pl-section h4:first-child{margin-top:0}
+.track{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #f8f8f8;font-size:13px}
+.track:last-child{border-bottom:none}
+.track-name{font-weight:500}.track-artist{font-size:12px;color:#888}
+.track-bpm{font-size:11px;padding:2px 8px;background:#f0f0f0;border-radius:8px;color:#555;white-space:nowrap;margin-left:8px}
+@media(max-width:700px){.grid2,.bilan-grid,.courses-grid,.fiche-body{grid-template-columns:1fr}.main-nav{width:100%}}
+
+.custom-exo-zone { margin-top: 18px; border-top: 2px dashed #e0e0e0; padding-top: 14px; }
+.custom-exo-zone-title { font-size: 12px; font-weight: 700; color: #aaa; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 10px; }
+.custom-exo-card { border: 1px dashed #c8e6dc; border-radius: 10px; padding: 12px 14px; margin-bottom: 10px; background: #f9fffe; }
+.custom-exo-card input, .custom-exo-card textarea, .custom-exo-card select { width: 100%; border: 1px solid #e0e0e0; border-radius: 6px; padding: 6px 10px; font-size: 13px; font-family: inherit; background: #fff; color: #333; outline: none; margin-bottom: 6px; }
+.custom-exo-card input:focus, .custom-exo-card textarea:focus, .custom-exo-card select:focus { border-color: #0F6E56; }
+.custom-exo-card textarea { resize: vertical; min-height: 50px; }
+.custom-exo-card label { font-size: 11px; color: #888; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; display: block; margin-bottom: 3px; }
+.custom-exo-card .exo-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.add-exo-btn { padding: 7px 16px; border: 1px dashed #0F6E56; border-radius: 8px; background: #e8f5f0; color: #0F6E56; cursor: pointer; font-size: 13px; font-family: inherit; font-weight: 600; }
+.del-exo-btn { float: right; background: none; border: none; cursor: pointer; color: #ddd; font-size: 18px; line-height: 1; padding: 0; }
+.del-exo-btn:hover { color: #e24b4a; }
+</style>
+
+
+
+<script>
+const JSONBIN_ID = '6a3d2518da38895dfefd3bb9';
+const JSONBIN_KEY = '$2a$10$13ipw/jF0CNFoTmPtLfQAuikPHWqyb0gA6C.iF5JEo1if/CIJyW2e';
+const API_URL = 'https://api.jsonbin.io/v3/b/' + JSONBIN_ID;
+
+let _remoteData = {};
+let _saveTimer = null;
+
+function setIndicator(status) {
+  const el = document.getElementById('sync-indicator');
+  if (!el) return;
+  if (status === 'ok') { el.textContent = '🟢 Synchronisé'; el.style.color = '#0F6E56'; }
+  else if (status === 'saving') { el.textContent = '🔄 Sauvegarde…'; el.style.color = '#854F0B'; }
+  else if (status === 'error') { el.textContent = '🔴 Erreur sync'; el.style.color = '#e24b4a'; }
+  else { el.textContent = '⏳ Connexion…'; el.style.color = '#aaa'; }
+}
+
+async function loadFromServer() {
+  try {
+    const r = await fetch(API_URL + '/latest', {
+      headers: { 'X-Master-Key': JSONBIN_KEY }
+    });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const json = await r.json();
+    _remoteData = json.record || {};
+    const wk = window.WEEKS ? window.WEEKS[window.weekIdx].key : null;
+    if (wk) applyPlanningToPage(_remoteData.planning || {}, wk);
+    applyExosToPage(_remoteData.exos || {});
+    setIndicator('ok');
+  } catch(e) {
+    console.error('Load error:', e);
+    setIndicator('error');
+  }
+}
+
+function applyPlanningToPage(planning, wk) {
+  const data = planning[wk] || {};
+  const allKeys = [
+    'wb0','wb1','wb2','wb3','wb4','wb5','wb6',
+    'wl0','wl1','wl2','wl3','wl4','wl5','wl6',
+    'bs0','bs1','bs2','bs3','bs4','bs5','bs6',
+    'br0','br1','br2','br3','br4','br5','br6',
+    'ls0','ls1','ls2','ls3','ls4','ls5','ls6',
+    'lr0','lr1','lr2','lr3','lr4','lr5','lr6',
+    'mm0','mm1','mm2','mm3','mm4','mm5','mm6',
+    'ms0','ms1','ms2','ms3','ms4','ms5','ms6',
+  ];
+  allKeys.forEach(k => {
+    const el = document.getElementById(k + 'i');
+    if (el && document.activeElement !== el) el.value = data[k] || '';
+  });
+}
+
+function applyExosToPage(exos) {
+  Object.entries(exos).forEach(([zoneId, list]) => {
+    const container = document.getElementById('custom-' + zoneId);
+    if (!container) return;
+    if (container.querySelectorAll('.custom-exo-card').length !== list.length) {
+      container.innerHTML = '';
+      list.forEach(exo => addCustomExoData(zoneId, exo));
+    }
+  });
+}
+
+async function saveToServer() {
+  setIndicator('saving');
+  try {
+    const r = await fetch(API_URL, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Master-Key': JSONBIN_KEY
+      },
+      body: JSON.stringify(_remoteData)
+    });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    setIndicator('ok');
+  } catch(e) {
+    console.error('Save error:', e);
+    setIndicator('error');
+  }
+}
+
+function scheduleSave() {
+  setIndicator('saving');
+  clearTimeout(_saveTimer);
+  _saveTimer = setTimeout(saveToServer, 1500);
+}
+
+window.saveCell = function(key, val) {
+  const wk = window.WEEKS ? window.WEEKS[window.weekIdx].key : 'default';
+  if (!_remoteData.planning) _remoteData.planning = {};
+  if (!_remoteData.planning[wk]) _remoteData.planning[wk] = {};
+  _remoteData.planning[wk][key] = val;
+  scheduleSave();
+};
+
+window.listenWeek = function(wk) {
+  applyPlanningToPage(_remoteData.planning || {}, wk);
+};
+
+window.saveCustomExos = function(zoneId) {
+  const container = document.getElementById('custom-' + zoneId);
+  if (!container) return;
+  const cards = container.querySelectorAll('.custom-exo-card');
+  const list = [];
+  cards.forEach(card => {
+    const inputs = card.querySelectorAll('input, textarea, select');
+    list.push({
+      name: inputs[0]?.value || '',
+      cat: inputs[1]?.value || '',
+      desc: inputs[2]?.value || '',
+      vars: inputs[3]?.value || '',
+    });
+  });
+  if (!_remoteData.exos) _remoteData.exos = {};
+  _remoteData.exos[zoneId] = list;
+  scheduleSave();
+};
+
+setInterval(loadFromServer, 15000);
+window.addEventListener('load', () => setTimeout(loadFromServer, 800));
+</script>
+</head>
+<body>
+
+<div class="app-header">
+  <div><div class="app-title">🏊 Aqua Pro</div><div class="app-subtitle">Bleuenn & Louan — Jura 2026 <span id="sync-indicator" style="font-size:12px;color:#aaa;margin-left:8px">⏳ Connexion…</span></div></div>
+  <div class="main-nav">
+    <button class="main-btn active" onclick="switchDoc('natation')">📘 Natation</button>
+    <button class="main-btn" onclick="switchDoc('aquagym')">💦 Aquagym</button>
+    <button class="main-btn" onclick="switchDoc('planning')">🗓️ Planning</button>
+  </div>
+</div>
+
+<!-- ========== DOC 1 : NATATION ========== -->
+<div id="doc-natation" class="doc-panel active">
+  <div class="sub-nav">
+    <button class="sub-tab active" onclick="switchSub('natation','bebes')">🍼 Bébés nageurs</button>
+    <button class="sub-tab" onclick="switchSub('natation','aisance')">🌊 Aisance aquatique</button>
+    <button class="sub-tab" onclick="switchSub('natation','apprentissage')">🏊 Apprentissage</button>
+    <button class="sub-tab" onclick="switchSub('natation','perfectionnement')">🏅 Perfectionnement</button>
+    <button class="sub-tab" onclick="switchSub('natation','fiches')">📋 Fiches élèves</button>
+  </div>
+
+  <!-- BÉBÉS NAGEURS -->
+  <div id="nat-bebes" class="section active">
+    <div class="section-toggle">
+      <button class="toggle-btn active" onclick="toggleNat('bebes','cours')">📖 Cours & conseils</button>
+      <button class="toggle-btn" onclick="toggleNat('bebes','exos')">🏋 Exercices</button>
+    </div>
+    <div id="nat-bebes-cours" class="section active">
+      <h2 class="sh">Bébés nageurs <span style="font-size:13px;font-weight:400;color:#888">0–3 ans</span></h2>
+      <div class="tip">Les parents sont toujours dans l'eau. Tu es coordinateur·rice, pas intervenant·e direct·e.</div>
+      <div class="grid2">
+        <div class="info-card"><h3>Profil & cadre</h3><span class="badge b-age">0–36 mois</span><span class="badge b-obj">Éveil aquatique</span><br><br><ul><li>Max 6–8 dyades (bébé + parent) par MNS</li><li>Température eau : 30–32°C minimum</li><li>Durée : 30 min max</li><li>Profondeur : zone bébé uniquement</li><li>Jouets colorés flottants indispensables</li></ul></div>
+        <div class="info-card"><h3>Objectifs pédagogiques</h3><ul><li>Désensibilisation progressive à l'eau</li><li>Renforcer le lien parent-enfant</li><li>Stimulation sensorielle (toucher, sons, couleurs)</li><li>Développement moteur global</li><li>Plaisir avant tout — jamais de performance</li><li>Premier contact avec la flottabilité</li></ul></div>
+        <div class="info-card"><h3>Sécurité absolue</h3><ul><li>Parent toujours à moins d'un bras de l'enfant</li><li>Aucune immersion forcée — respecter le refus</li><li>Surveiller l'hypothermie (lèvres bleues, frissons)</li><li>Vérifier la réaction à l'eau avant tout</li><li>MNS en surveillance active en permanence</li><li>Sortie si pleurs incontrôlables</li></ul></div>
+        <div class="info-card"><h3>Conseils MNS</h3><ul><li>Voix douce, posture basse dans l'eau</li><li>Valoriser le rôle du parent</li><li>Rituel de début ET de fin (comptine)</li><li>Observer les signaux de fatigue et de peur</li><li>Adapter le rythme à chaque dyade</li><li>Finir toujours sur un moment positif</li></ul></div>
+        <div class="info-card"><h3>Structure séance type</h3><ul><li><strong>0–5 min</strong> : rituel d'entrée, comptine dans l'eau</li><li><strong>5–15 min</strong> : jeux de découverte sensorielle</li><li><strong>15–25 min</strong> : exercice principal (immersion progressive)</li><li><strong>25–30 min</strong> : rituel de sortie, calme</li></ul></div>
+        <div class="info-card"><h3>Matériel</h3><span class="badge b-mat">Arrosettes</span><span class="badge b-mat">Jouets flottants</span><span class="badge b-mat">Cerceaux</span><span class="badge b-mat">Balles</span><span class="badge b-mat">Toboggan bébé</span><span class="badge b-mat">Tapis aquatique</span></div>
+      </div>
+    </div>
+    <div id="nat-bebes-exos" class="section">
+      <h2 class="sh">Exercices — Bébés nageurs</h2>
+      <div class="tip">Toujours dans le jeu. Niveau 1 = découverte | Niveau 2 = immersion | Niveau 3 = autonomisation</div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Pluie sur le ventre</span><span class="exo-cat cat-deco">Découverte</span></div><p class="exo-desc">Verser doucement de l'eau sur le ventre du bébé avec une arrosette ou la main, en nommant les parties du corps.</p><div class="variables"><strong>Variables :</strong> ventre → poitrine → épaules → nuque → visage (en dernier) | eau tiède → eau piscine | arrosette → main → fontaine murale | avec comptine → sans</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Le bateau</span><span class="exo-cat cat-deco">Découverte</span></div><p class="exo-desc">Bébé en décubitus dorsal, soutenu par les deux mains du parent sous le dos et la nuque. Déplacement lent en ligne droite.</p><div class="variables"><strong>Variables :</strong> 2 mains soutien → 1 main → flotteurs sous les bras | droit → courbe → slalom | avec chanson → sans | vitesse lente → légèrement plus rapide</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Le crocodile</span><span class="exo-cat cat-deco">Découverte</span></div><p class="exo-desc">Bébé en décubitus ventral, soutenu sous le ventre et la poitrine. Parent avance doucement en faisant "nager" bébé à la surface.</p><div class="variables"><strong>Variables :</strong> 2 mains → 1 main sous le ventre | 1m → 3m → 5m | avec jouet attrapé à l'arrivée | avec bruit de grenouille → sans</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Bulles de poisson</span><span class="exo-cat cat-tech">Immersion douce</span></div><p class="exo-desc">Parent montre comment souffler des bulles, le visage dans l'eau. Bébé imite à son rythme, en commençant par les lèvres.</p><div class="variables"><strong>Variables :</strong> parent seul → bébé observe → bébé imite | lèvres → menton → nez → bouche | 2s → 4s → 6s | avec jouet immergé comme motivation</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">La plongée de la grenouille</span><span class="exo-cat cat-tech">Immersion</span></div><p class="exo-desc">Signal verbal + souffle sur le visage avant immersion (déclenche le réflexe apnéique). Parent accompagne bébé sous l'eau 1–2s puis remonte.</p><div class="variables"><strong>Variables :</strong> menton → bouche → nez → tête entière | 1s → 2s → 3s | rebond trampoline → glissé → saut du bord | comptine annonce → signal seul</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Récupération d'objet</span><span class="exo-cat cat-tech">Immersion</span></div><p class="exo-desc">Jouet brillant immergé à 20–30 cm. Bébé guidé par le parent pour le récupérer, yeux ouverts dans l'eau.</p><div class="variables"><strong>Variables :</strong> surface → semi-immergé → fond zone bébé | 10 cm → 30 cm → 50 cm de distance | parent guide → bébé cherche seul | 1 objet → 2</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Le lancer de balle</span><span class="exo-cat cat-coord">Coordination</span></div><p class="exo-desc">Parent et bébé se font rouler ou lancer une balle flottante. Développe la coordination et le jeu à deux dans l'eau.</p><div class="variables"><strong>Variables :</strong> balle flottante → semi-immergée | 50cm → 1m → 2m | 1 balle → 2 | avec déplacement pour attraper</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Sauts du bord</span><span class="exo-cat cat-coord">Autonomisation</span></div><p class="exo-desc">Bébé assis sur le bord, parent dans l'eau face à lui. Au signal, bébé glisse ou saute dans les bras du parent.</p><div class="variables"><strong>Variables :</strong> glissé du bord → micro-saut → saut bras tendus | parent très proche → 30cm → 50cm | comptine → signal simple → bébé décide</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Le grand bain autonome</span><span class="exo-cat cat-coord">Autonomisation</span></div><p class="exo-desc">Bébé tenu sous les bras face au MNS, explore la propulsion avec ses jambes. Battements instinctifs guidés vers un jouet.</p><div class="variables"><strong>Variables :</strong> soutien aisselles → bras tendus → lâcher 0.5s → lâcher 2s | 50cm → 1m → 2m | avec petites palmes → sans</div></div>
+    
+    <div class="custom-exo-zone">
+      <div class="custom-exo-zone-title">✏️ Mes exercices perso</div>
+      <div id="custom-nat-bebes-exos"></div>
+      <button class="add-exo-btn" onclick="addCustomExo('nat-bebes-exos')">+ Ajouter un exercice</button>
+    </div>
+</div>
+  </div>
+
+  <!-- AISANCE AQUATIQUE -->
+  <div id="nat-aisance" class="section">
+    <div class="section-toggle">
+      <button class="toggle-btn active" onclick="toggleNat('aisance','cours')">📖 Cours & conseils</button>
+      <button class="toggle-btn" onclick="toggleNat('aisance','exos')">🏋 Exercices</button>
+    </div>
+    <div id="nat-aisance-cours" class="section active">
+      <h2 class="sh">Aisance aquatique <span style="font-size:13px;font-weight:400;color:#888">3–6 ans</span></h2>
+      <div class="tip">L'enfant entre seul dans l'eau et accepte que son visage soit immergé. Toujours dans le plaisir.</div>
+      <div class="grid2">
+        <div class="info-card"><h3>Profil & cadre</h3><span class="badge b-age">3–6 ans</span><span class="badge b-obj">Aisance</span><br><br><ul><li>Max 6–8 enfants / MNS</li><li>Profondeur max. 80cm (petits bains)</li><li>Durée : 30–45 min</li><li>Matériel : frites, planches, cerceaux, jouets</li></ul></div>
+        <div class="info-card"><h3>Compétences visées</h3><ul><li>Entrer et sortir seul du bassin</li><li>Souffler dans l'eau (bulles)</li><li>Ouvrir les yeux sous l'eau</li><li>Se laisser flotter avec aide puis seul</li><li>Se déplacer avec équipement</li><li>Plonger pour récupérer un objet</li></ul></div>
+        <div class="info-card"><h3>Points de vigilance</h3><ul><li>Ne jamais forcer l'immersion</li><li>Respecter le rythme de chaque enfant</li><li>Crainte → reprendre au niveau 1</li><li>Valoriser chaque progrès même infime</li><li>Surveiller les plus audacieux</li></ul></div>
+        <div class="info-card"><h3>Conseils MNS</h3><ul><li>Jeux et défis avant tout</li><li>Max 3–4 objectifs par séance</li><li>Rituels clairs (entrée, sortie, consigne)</li><li>Regrouper par niveau de peur/aisance</li><li>Utiliser la compétition friendly</li></ul></div>
+        <div class="info-card"><h3>Structure séance type</h3><ul><li><strong>0–5 min</strong> : entrée dans l'eau, jeu libre</li><li><strong>5–15 min</strong> : objectif 1 (bulles / yeux)</li><li><strong>15–30 min</strong> : objectif 2 (flottaison / déplacement)</li><li><strong>30–40 min</strong> : jeu collectif d'application</li><li><strong>40–45 min</strong> : sortie calme, bilan</li></ul></div>
+        <div class="info-card"><h3>Matériel</h3><span class="badge b-mat">Frites</span><span class="badge b-mat">Planches</span><span class="badge b-mat">Cerceaux</span><span class="badge b-mat">Tapettes</span><span class="badge b-mat">Objets coulants</span><span class="badge b-mat">Lunettes</span></div>
+      </div>
+    </div>
+    <div id="nat-aisance-exos" class="section">
+      <h2 class="sh">Exercices — Aisance aquatique</h2>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Les bulles du crocodile</span><span class="exo-cat cat-deco">Souffle</span></div><p class="exo-desc">Souffler des bulles en posant les lèvres à la surface, puis immerger progressivement nez, bouche, visage entier.</p><div class="variables"><strong>Variables :</strong> lèvres → nez → bouche → yeux fermés → yeux ouverts | 2s → 4s → 6s → 10s | avec aide → autonome | compétition la plus longue</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">La statue</span><span class="exo-cat cat-deco">Équilibre vertical</span></div><p class="exo-desc">Tenir immobile en position verticale, bras le long du corps, et maintenir la flottaison quelques secondes.</p><div class="variables"><strong>Variables :</strong> frite sous bras → sans | 2s → 5s → 10s → 20s | eau peu profonde → profonde | yeux ouverts → fermés</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">La méduse</span><span class="exo-cat cat-deco">Flottaison ventrale</span></div><p class="exo-desc">En position fœtale face vers le bas, bras et jambes repliés, se laisser flotter immobile à la surface.</p><div class="variables"><strong>Variables :</strong> aide MNS → seul | 3s → 5s → 10s | grandes inspirations avant → expiration lente | compter les méduses au signal</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Étoile de mer sur le dos</span><span class="exo-cat cat-deco">Flottaison dorsale</span></div><p class="exo-desc">Décubitus dorsal, bras et jambes écartés, regarder le plafond. La position dorsale demande de la confiance.</p><div class="variables"><strong>Variables :</strong> aide MNS sous la nuque → 1 doigt → sans aide | 3s → 10s → 30s | oreilles dans l'eau → hors de l'eau | yeux ouverts → fermés</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Torpille sur le ventre</span><span class="exo-cat cat-tech">Propulsion</span></div><p class="exo-desc">Pousser sur le bord en position allongée, bras tendus, face dans l'eau, glisser le plus loin possible sans bouger.</p><div class="variables"><strong>Variables :</strong> avec planche → sans | face hors eau → dans l'eau | + battements de jambes → glissé seul | 2m → 5m → 8m | défi sans battements</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Torpille sur le dos</span><span class="exo-cat cat-tech">Propulsion dorsale</span></div><p class="exo-desc">Pousser sur le mur, bras le long du corps, glisser en position dorsale les yeux au plafond.</p><div class="variables"><strong>Variables :</strong> bras sur cuisses → bras tendus derrière la tête | oreilles dans eau → hors eau | 2m → 5m → 8m | défi distance</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Ramassage de trésors</span><span class="exo-cat cat-tech">Immersion</span></div><p class="exo-desc">Plonger pour ramasser des objets immergés à faible profondeur. Compétition par équipes ou contre la montre.</p><div class="variables"><strong>Variables :</strong> 20cm → 40cm → 60cm → fond bassin | 1 objet → 3 → course équipes | sans lunettes → avec | chronométré</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Passage du cerceau</span><span class="exo-cat cat-tech">Immersion totale</span></div><p class="exo-desc">Passer à travers un cerceau tenu verticalement dans l'eau, en immersion totale, sans toucher le cerceau.</p><div class="variables"><strong>Variables :</strong> cerceau en surface → mi-profondeur → fond | tenu MNS → posé au fond | 1 cerceau → 3 en série | enchaînement avec torpille d'arrivée</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Le train aquatique</span><span class="exo-cat cat-coord">Déplacement collectif</span></div><p class="exo-desc">En file indienne, chaque enfant tient les épaules de celui devant, le "conducteur" choisit la direction.</p><div class="variables"><strong>Variables :</strong> pas de battements → battements → tous lâchent sauf la tête | conducteur désigné → vote | circuit défini → libre</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Départ depuis le bord</span><span class="exo-cat cat-coord">Saut</span></div><p class="exo-desc">Assis sur le bord, puis debout, sauter dans l'eau en extension, entrer les pieds en premier.</p><div class="variables"><strong>Variables :</strong> assis → accroupi → debout | pieds → groupé → saut en croix | MNS devant → autonome | compter la hauteur de l'éclaboussure</div></div>
+    
+    <div class="custom-exo-zone">
+      <div class="custom-exo-zone-title">✏️ Mes exercices perso</div>
+      <div id="custom-nat-aisance-exos"></div>
+      <button class="add-exo-btn" onclick="addCustomExo('nat-aisance-exos')">+ Ajouter un exercice</button>
+    </div>
+</div>
+  </div>
+
+  <!-- APPRENTISSAGE -->
+  <div id="nat-apprentissage" class="section">
+    <div class="section-toggle">
+      <button class="toggle-btn active" onclick="toggleNat('apprentissage','cours')">📖 Cours & conseils</button>
+      <button class="toggle-btn" onclick="toggleNat('apprentissage','exos')">🏋 Exercices</button>
+    </div>
+    <div id="nat-apprentissage-cours" class="section active">
+      <h2 class="sh">Apprentissage <span style="font-size:13px;font-weight:400;color:#888">6–10 ans</span></h2>
+      <div class="tip">Le nageur sait flotter. On construit le crawl et la brasse en priorité, avec coordination et respiration.</div>
+      <div class="grid2">
+        <div class="info-card"><h3>Profil & cadre</h3><span class="badge b-age">6–10 ans</span><span class="badge b-obj">Technique de base</span><br><br><ul><li>Max 8–10 enfants / MNS</li><li>Longueur de bassin utilisée</li><li>Durée : 45 min</li><li>Nages : crawl, dos, brasse, intro papillon</li></ul></div>
+        <div class="info-card"><h3>Priorités techniques</h3><ul><li>Corps horizontal = priorité absolue</li><li>Respiration rythmée au crawl (2 ou 3 temps)</li><li>Brasse : jambes en cœur (pas de ciseaux !)</li><li>Dos : regard plafond, tête neutre</li><li>Plongeon depuis le bord</li></ul></div>
+        <div class="info-card"><h3>Progression par nage</h3><ul><li><strong>Crawl :</strong> jambes → bras → coordination → souffle</li><li><strong>Brasse :</strong> jambes grenouille → bras → synchro</li><li><strong>Dos :</strong> battements → moulin à bras</li><li><strong>Papillon :</strong> ondulation → bras simultanés</li></ul></div>
+        <div class="info-card"><h3>Erreurs fréquentes</h3><ul><li>Tête levée au crawl (corps qui coule)</li><li>Brasse ciseaux (genou sur le côté)</li><li>Bras qui ne tirent pas sous l'axe</li><li>Respiration trop fréquente (tous les 2 bras)</li><li>Jambes fléchies au crawl</li></ul></div>
+        <div class="info-card"><h3>Matériel pédagogique</h3><span class="badge b-mat">Planche</span><span class="badge b-mat">Pull-buoy</span><span class="badge b-mat">Palmes</span><span class="badge b-mat">Tuba frontal</span><span class="badge b-mat">Plaquettes</span><span class="badge b-mat">Lunettes</span></div>
+        <div class="info-card"><h3>Structure séance type</h3><ul><li><strong>0–5 min</strong> : échauffement libre ou jeu</li><li><strong>5–20 min</strong> : technique isolée (jambes OU bras)</li><li><strong>20–35 min</strong> : coordination + respiration</li><li><strong>35–45 min</strong> : application sur longueurs + bilan</li></ul></div>
+      </div>
+    </div>
+    <div id="nat-apprentissage-exos" class="section">
+      <h2 class="sh">Exercices — Apprentissage</h2>
+      <div class="cat-label">— Crawl —</div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Battements de jambes crawl</span><span class="exo-cat cat-tech">Crawl — jambes</span></div><div class="consignes"><strong>Consigne :</strong> jambes tendues, orteils pointés, battements alternés depuis la hanche. Corps horizontal.</div><div class="variables"><strong>Variables :</strong> 2 planches → 1 planche → sans | avec palmes → sans | bras tendus → sur les cuisses | face dans l'eau → hors eau | 25m → 50m → 100m</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Bras crawl avec pull-buoy</span><span class="exo-cat cat-tech">Crawl — bras</span></div><div class="consignes"><strong>Consigne :</strong> entrée en extension, traction sous l'axe, sortie à la cuisse. Épaule sort de l'eau à chaque bras.</div><div class="variables"><strong>Variables :</strong> bras droit seul → bras gauche → alternance | avec tuba → sans | avec plaquettes → sans | 25m → 50m</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Crawl 3 temps / respiration</span><span class="exo-cat cat-tech">Crawl — souffle</span></div><div class="consignes"><strong>Consigne :</strong> respirer tous les 3 temps, alterner la latéralité (droite ET gauche). Expiration dans l'eau.</div><div class="variables"><strong>Variables :</strong> tous les 2 bras → 3 → 4 | côté dominant → non-dominant → bilatéral | tuba d'abord → sans | 25m → 50m → 100m</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Coordination crawl complète</span><span class="exo-cat cat-coord">Crawl complet</span></div><div class="consignes"><strong>Consigne :</strong> enchaîner bras + jambes + respiration. Compter les respirations par longueur.</div><div class="variables"><strong>Variables :</strong> lent → progressif → sprint final | 25m → 100m → 200m | avec palmes → sans | yeux fermés 5 coups de bras (proprioception)</div></div>
+      <div class="cat-label">— Brasse —</div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Jambes brasse sur le bord</span><span class="exo-cat cat-tech">Brasse — jambes</span></div><div class="consignes"><strong>Consigne :</strong> assis au bord : talons → genoux écartés dans l'axe épaules → pousser en extension. Vérifier absence de ciseaux.</div><div class="variables"><strong>Variables :</strong> à sec (bord) → dans l'eau avec planche | 1 jambe observée → 2 jambes | lent (analyse) → normal | MNS corrige en direct</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Jambes brasse avec planche</span><span class="exo-cat cat-tech">Brasse — jambes</span></div><div class="consignes"><strong>Consigne :</strong> planche à bout de bras, tête dans l'eau, pousser avec les pieds et glisser entre chaque brassée.</div><div class="variables"><strong>Variables :</strong> planche → pull-buoy → coordination | glissé long → court → sans glissé | 25m → 50m | compter les brassées pour 25m (moins = mieux)</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Bras brasse avec pull-buoy</span><span class="exo-cat cat-tech">Brasse — bras</span></div><div class="consignes"><strong>Consigne :</strong> traction simultanée vers l'extérieur, coudes hauts, puis extension avant pour glisser.</div><div class="variables"><strong>Variables :</strong> sans pull-buoy → avec | bras seuls → avec respiration | 25m → 50m | plaquettes pour sentir l'appui</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Brasse complète synchronisée</span><span class="exo-cat cat-coord">Brasse complète</span></div><div class="consignes"><strong>Consigne :</strong> 1 brassée bras → 1 brassée jambes → glissé → respiration. Le glissé est la clé de la brasse.</div><div class="variables"><strong>Variables :</strong> séparés → synchronisés | glissé 1s → 2s → court | 25m → 100m | défi longueurs sans reprendre le souffle</div></div>
+      <div class="cat-label">— Dos & divers —</div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Battements de jambes dos</span><span class="exo-cat cat-tech">Dos — jambes</span></div><div class="consignes"><strong>Consigne :</strong> regard plafond, oreilles dans l'eau, battements alternés depuis la hanche. Orteils qui affleurent la surface.</div><div class="variables"><strong>Variables :</strong> planche sur poitrine → bras sur cuisses → bras derrière la tête → bras en croix | 25m → 50m | yeux ouverts → fermés</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Moulin à bras dos</span><span class="exo-cat cat-tech">Dos complet</span></div><div class="consignes"><strong>Consigne :</strong> sortir le bras à la hanche, entrée en extension derrière l'oreille, traction sous l'axe.</div><div class="variables"><strong>Variables :</strong> bras droit seul → gauche → alternance | avec pull-buoy → sans | 25m → 50m → 100m | sans regarder les bras</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Plongeon + 15m crawl</span><span class="exo-cat cat-coord">Plongeon</span></div><div class="consignes"><strong>Consigne :</strong> position fléchie sur le bord, entrée doigts en premier, glisser sous l'eau et reprendre le crawl en enchaînant.</div><div class="variables"><strong>Variables :</strong> entrée debout → fléchi → plongeon → bloc | 15m → 25m → 50m | 1 essai → séries de 5 | avec chrono</div></div>
+    
+    <div class="custom-exo-zone">
+      <div class="custom-exo-zone-title">✏️ Mes exercices perso</div>
+      <div id="custom-nat-apprentissage-exos"></div>
+      <button class="add-exo-btn" onclick="addCustomExo('nat-apprentissage-exos')">+ Ajouter un exercice</button>
+    </div>
+</div>
+  </div>
+
+  <!-- PERFECTIONNEMENT -->
+  <div id="nat-perfectionnement" class="section">
+    <div class="section-toggle">
+      <button class="toggle-btn active" onclick="toggleNat('perfectionnement','cours')">📖 Cours & conseils</button>
+      <button class="toggle-btn" onclick="toggleNat('perfectionnement','exos')">🏋 Exercices</button>
+    </div>
+    <div id="nat-perfectionnement-cours" class="section active">
+      <h2 class="sh">Perfectionnement <span style="font-size:13px;font-weight:400;color:#888">10 ans +</span></h2>
+      <div class="tip">Le nageur maîtrise les 4 nages. On affine la technique, on développe l'endurance et la vitesse.</div>
+      <div class="grid2">
+        <div class="info-card"><h3>Profil & cadre</h3><span class="badge b-age">10 ans +</span><span class="badge b-obj">Performance</span><br><br><ul><li>Max 10–12 nageurs / MNS</li><li>Toutes nages + virages + départs</li><li>Durée : 45–60 min</li><li>Chronomètres, parachutes optionnels</li></ul></div>
+        <div class="info-card"><h3>Points techniques fins</h3><ul><li>Crawl : rotation corps 45°, EVF (Early Vertical Forearm)</li><li>Papillon : ondulation hanche, double battement</li><li>Virage culbute crawl/dos</li><li>Départ bloc (semi-allongé)</li><li>Brasse : glissé maximal après chaque brassée</li></ul></div>
+        <div class="info-card"><h3>Structure séance type</h3><ul><li><strong>0–10 min</strong> : échauffement 400–600m nage libre</li><li><strong>10–25 min</strong> : technique ciblée + corrections</li><li><strong>25–45 min</strong> : séries endurance ou vitesse</li><li><strong>45–55 min</strong> : sprint / objectif personnel</li><li><strong>55–60 min</strong> : récup + étirements bord</li></ul></div>
+        <div class="info-card"><h3>Erreurs à corriger en priorité</h3><ul><li>Crawl : main qui croise l'axe médian</li><li>Papillon : ondulation trop de la tête (pas hanches)</li><li>Brasse : genou qui s'écarte trop</li><li>Virage : recul de la tête avant la culbute</li></ul></div>
+        <div class="info-card"><h3>Indicateurs de progrès</h3><ul><li>Temps sur 50m / 100m / 400m</li><li>Nombre de brassées par longueur (moins = mieux)</li><li>Fréquence de nage à volume constant</li><li>Temps de virage</li><li>Régularité entre les longueurs</li></ul></div>
+        <div class="info-card"><h3>Matériel avancé</h3><span class="badge b-mat">Plaquettes</span><span class="badge b-mat">Parachute</span><span class="badge b-mat">Élastique</span><span class="badge b-mat">Chrono</span><span class="badge b-mat">Montre</span><span class="badge b-mat">Tuba frontal</span></div>
+      </div>
+    </div>
+    <div id="nat-perfectionnement-exos" class="section">
+      <h2 class="sh">Exercices — Perfectionnement</h2>
+      <div class="cat-label">— Technique fine —</div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Catch-up crawl</span><span class="exo-cat cat-tech">Allongement</span></div><div class="consignes"><strong>Consigne :</strong> attendre que le bras en avant revienne avant d'amorcer la traction. Développe la glisse et l'EVF.</div><div class="variables"><strong>Variables :</strong> sans palmes → avec | pause 1s → 0.5s → continu | avec tuba → sans | 50m → 100m → 200m</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Nage à 1 bras</span><span class="exo-cat cat-tech">Crawl bras isolé</span></div><div class="consignes"><strong>Consigne :</strong> un bras travaille, l'autre immobile. Permet de corriger chaque bras séparément.</div><div class="variables"><strong>Variables :</strong> bras passif le long → tendu → pull-buoy | 25m D → 25m G → alternance | avec respiration côté travaillant → bilatérale | plaquettes</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Ondulation papillon (dauphin)</span><span class="exo-cat cat-tech">Papillon</span></div><div class="consignes"><strong>Consigne :</strong> ondulation part des épaules, passe par le bassin, s'amplifie aux jambes. Deux pieds ensemble.</div><div class="variables"><strong>Variables :</strong> sans bras → bras le long → tendus | avec palmes → sans | sous l'eau → en surface | 25m → 50m</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Papillon complet</span><span class="exo-cat cat-tech">Papillon</span></div><div class="consignes"><strong>Consigne :</strong> 2 battements par cycle bras. Respirer tous les 2 cycles minimum.</div><div class="variables"><strong>Variables :</strong> 1 brassée papillon + 3 crawl → 2+2 → papillon seul | respirer tous 2 → 3 → 4 cycles | avec palmes → sans | 25m → 50m</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Virage culbute crawl</span><span class="exo-cat cat-tech">Virages</span></div><div class="consignes"><strong>Consigne :</strong> dernière foulée, culbute sur soi-même, poussée pieds → extension → reprise. S'entraîner au timing.</div><div class="variables"><strong>Variables :</strong> virages isolés → intégrés dans longueur | poussée courte → longue → sprint reprise | dos → crawl | avec chrono</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Nage avec parachute</span><span class="exo-cat cat-tech">Résistance</span></div><div class="consignes"><strong>Consigne :</strong> nager avec un parachute dans le dos pour augmenter la résistance et développer la puissance de traction.</div><div class="variables"><strong>Variables :</strong> parachute → sans (sensation de légèreté) | 25m → 50m | crawl → dos → brasse | séries courtes intensives</div></div>
+      <div class="cat-label">— Endurance & vitesse —</div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Séries en pyramide</span><span class="exo-cat cat-endo">Endurance</span></div><div class="consignes"><strong>Consigne :</strong> 4×25 + 3×50 + 2×75 + 1×100. Temps de récupération décroissant.</div><div class="variables"><strong>Variables :</strong> récup 30s → 20s → 15s → départ sur temps | nage libre → imposée | 70% → 85% → 95% | avec palmes → sans</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Sprint lactique</span><span class="exo-cat cat-vit">Vitesse</span></div><div class="consignes"><strong>Consigne :</strong> 6×25m intensité maximale. Récupération complète (2–3 min). Maintenir la vitesse sur toute la série.</div><div class="variables"><strong>Variables :</strong> 6×25m → 4×50m → 2×100m | récup 2min → 3min | crawl → papillon → nage imposée | avec départ plongé → sans</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">4 nages enchaînées</span><span class="exo-cat cat-coord">Nage imposée</span></div><div class="consignes"><strong>Consigne :</strong> Papillon → Dos → Brasse → Crawl. Ordre réglementaire obligatoire.</div><div class="variables"><strong>Variables :</strong> 100m → 200m → 400m | réglementaire → inversé | seul → relais 4×25m | avec palmes papillon</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Séances au seuil</span><span class="exo-cat cat-endo">Endurance spécifique</span></div><div class="consignes"><strong>Consigne :</strong> 10×100m départ toutes les 2min. Objectif : maintenir le même temps sur toutes les répétitions.</div><div class="variables"><strong>Variables :</strong> 10×100m → 5×200m → 3×400m | départ 2min → 1min45 → 1min30 | nage imposée → libre | noter les temps</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Test Cooper aquatique</span><span class="exo-cat cat-endo">Évaluation</span></div><div class="consignes"><strong>Consigne :</strong> nager le plus de mètres possible en 12 minutes. Évalue l'endurance aérobie et permet de suivre la progression.</div><div class="variables"><strong>Variables :</strong> nage libre → imposée | individuel → compétitif | noter le résultat → refaire 3 semaines après</div></div>
+    
+    <div class="custom-exo-zone">
+      <div class="custom-exo-zone-title">✏️ Mes exercices perso</div>
+      <div id="custom-nat-perfectionnement-exos"></div>
+      <button class="add-exo-btn" onclick="addCustomExo('nat-perfectionnement-exos')">+ Ajouter un exercice</button>
+    </div>
+</div>
+  </div>
+
+  <!-- FICHES ÉLÈVES -->
+  <div id="nat-fiches" class="section">
+    <h2 class="sh">Fiches de suivi élèves</h2>
+    <div class="tip">Crée une fiche par élève pour suivre sa progression, noter ses points forts et ses objectifs de la semaine.</div>
+    <div id="fiches-container"></div>
+    <button onclick="addFiche()" style="padding:8px 18px;border:1px dashed #0F6E56;border-radius:8px;background:#e8f5f0;color:#0F6E56;cursor:pointer;font-size:13px;font-family:inherit">+ Nouvelle fiche élève</button>
+  </div>
+</div>
+
+<!-- ========== DOC 2 : AQUAGYM ========== -->
+<div id="doc-aquagym" class="doc-panel">
+  <div class="sub-nav">
+    <button class="sub-tab active" onclick="switchSub('aquagym','gym')">💦 Aquagym</button>
+    <button class="sub-tab" onclick="switchSub('aquagym','bike')">🚴 Aquabike</button>
+    <button class="sub-tab" onclick="switchSub('aquagym','training')">💪 Aquatraining</button>
+  </div>
+
+  <!-- AQUAGYM -->
+  <div id="gym-gym" class="section active">
+    <div class="section-toggle">
+      <button class="toggle-btn active" onclick="toggleGym('gym','exos')">🏋 Exercices</button>
+      <button class="toggle-btn" onclick="toggleGym('gym','playlist')">🎵 Playlists</button>
+    </div>
+    <div id="gym-gym-exos" class="section active">
+      <h2 class="sh">Aquagym — Exercices</h2>
+      <div class="info-card" style="margin-bottom:14px"><h3>Matériel</h3><span class="badge b-mat">Frites</span><span class="badge b-mat">Haltères aqua</span><span class="badge b-mat">Ceinture</span><span class="badge b-mat">Gants palmés</span><span class="badge b-mat">Step aqua</span><span class="badge b-mat">Ballon</span><span class="badge b-mat">Élastiques</span></div>
+      <div class="cat-label">— Échauffement —</div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Marche aquatique</span><span class="exo-cat cat-chauf">Échauffement</span></div><p class="exo-desc">Marcher en faisant varier les directions dans l'eau à hauteur de poitrine, bras en opposition.</p><div class="variables"><strong>Variables :</strong> avant → arrière → latéral | normale → pointe des pieds → grands bras | lent → rapide | 2 min → 5 min | gants palmés</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Balancement des bras</span><span class="exo-cat cat-chauf">Échauffement</span></div><p class="exo-desc">Debout, faire balancer les bras de droite à gauche sous l'eau en rotation du tronc. Mobilisation du rachis dorsal.</p><div class="variables"><strong>Variables :</strong> amplitude réduite → totale | bras sous l'eau → surface | lent → rythmé sur musique | avec haltères → sans</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Fentes avant alternées</span><span class="exo-cat cat-chauf">Échauffement</span></div><p class="exo-desc">Grandes fentes vers l'avant en alternance, bras opposés à la jambe avant. Activation quadriceps et fessiers.</p><div class="variables"><strong>Variables :</strong> lentes → dynamiques | courte → profonde | bras bas → en croix → avec haltères | 10 rép → 20</div></div>
+      <div class="cat-label">— Cardio —</div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Jogging genoux hauts</span><span class="exo-cat cat-cardio">Cardio</span></div><p class="exo-desc">Courir sur place en soulevant les genoux à hauteur de hanche, bras en opposition active.</p><div class="variables"><strong>Variables :</strong> genoux mi-haut → poitrine | sans → gants palmés | 30s/30s → Tabata 20s/10s | eau poitrine → eau bassin</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Jumping jacks (étoile)</span><span class="exo-cat cat-cardio">Cardio</span></div><p class="exo-desc">Sauter en écartant bras et jambes simultanément, puis revenir. Rythme musical.</p><div class="variables"><strong>Variables :</strong> amplitude réduite → complète | sans → frite entre jambes | 4 temps → 2 temps | 30 rép → 60 | eau poitrine → ceinture</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Botte de cow-boy</span><span class="exo-cat cat-cardio">Cardio</span></div><p class="exo-desc">Alterner les coups de pieds vers l'avant, jambe tendue, bras opposé tendu. Rythme soutenu.</p><div class="variables"><strong>Variables :</strong> hauteur cheville → genou → bassin | lent → rapide | 30s → 60s → 2min | avec frite pour équilibre → sans</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Course latérale</span><span class="exo-cat cat-cardio">Cardio</span></div><p class="exo-desc">Se déplacer latéralement d'un bord à l'autre en pas chassés, bras poussant l'eau en sens inverse.</p><div class="variables"><strong>Variables :</strong> lent → rapide | 5m → largeur bassin | bras passifs → actifs → gants palmés | 5 allers → 10 → chrono</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Slalom aquatique</span><span class="exo-cat cat-cardio">Cardio + agilité</span></div><p class="exo-desc">Courir en slalom entre des frites posées debout dans l'eau ou tenues par des partenaires.</p><div class="variables"><strong>Variables :</strong> 4 obstacles → 8 → 12 | lent → vitesse max | simple → avec changement de direction | chrono + progression</div></div>
+      <div class="cat-label">— Haut du corps —</div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Triceps aquatiques</span><span class="exo-cat cat-haut">Haut du corps</span></div><p class="exo-desc">Haltères à bout de bras vers le bas, pousser vers le haut contre la résistance (mouvement inversé vs à sec).</p><div class="variables"><strong>Variables :</strong> sans → haltères → gants | D/G seul → simultané | lent → explosif | 3×15 → 4×20</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Écartés pectoraux</span><span class="exo-cat cat-haut">Haut du corps</span></div><p class="exo-desc">Bras tendus à la surface, écarter vers les côtés puis ramener devant soi. Résistance en fermeture et ouverture.</p><div class="variables"><strong>Variables :</strong> lent → rapide | sans → haltères → gants | bras surface → immergés | 3×15 → 4×20</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Rameur aquatique</span><span class="exo-cat cat-haut">Dos / bras</span></div><p class="exo-desc">Imiter le mouvement de l'aviron : tirer les deux bras vers soi simultanément, coudes hauts.</p><div class="variables"><strong>Variables :</strong> bras passifs → actifs → résistance | amplitude courte → longue | 30s → 60s | avec gants palmés</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Boxe aquatique</span><span class="exo-cat cat-haut">Haut du corps</span></div><p class="exo-desc">Enchaîner des jabs et crochets sous l'eau, à hauteur de poitrine. Résistance de l'eau = charge naturelle.</p><div class="variables"><strong>Variables :</strong> jab D/G → crochet → uppercut → combinaisons | sans → gants palmés | 30s → 60s Tabata | sur musique rythmée</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Pompes sur le bord</span><span class="exo-cat cat-haut">Haut du corps</span></div><p class="exo-desc">Mains sur le bord du bassin, corps dans l'eau, faire des pompes en sortant la poitrine hors de l'eau.</p><div class="variables"><strong>Variables :</strong> amplitude réduite → complète | lent → rapide | 3×10 → 4×15 | prise large → serrée | avec saut final (explosif)</div></div>
+      <div class="cat-label">— Bas du corps —</div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Squats aquatiques</span><span class="exo-cat cat-bas">Bas du corps</span></div><p class="exo-desc">Pieds largeur épaules, descendre à 90°, remonter en poussant dans le sol.</p><div class="variables"><strong>Variables :</strong> normal → saut au retour → pied unique | 3×15 → 4×20 → EMOM | frite sous bras → sans | squat sumo (pieds à 45°)</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Kicks arrière (fessiers)</span><span class="exo-cat cat-bas">Bas du corps</span></div><p class="exo-desc">Main sur le bord ou frite devant, coups de pied vers l'arrière, jambe tendue, contraction fessier.</p><div class="variables"><strong>Variables :</strong> jambe fléchie → tendue | amplitude faible → totale | 20 rép/jambe → 30 → 40 | avec élastique → sans</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Montées de genoux latérales</span><span class="exo-cat cat-bas">Abducteurs / hanche</span></div><p class="exo-desc">Monter les genoux sur le côté (abduction), en ciblant les abducteurs et la hanche.</p><div class="variables"><strong>Variables :</strong> amplitude faible → totale | lent → rythmé | 20 → 40 rép | avec bande élastique | alternée → même côté 20×</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Squats sautés</span><span class="exo-cat cat-bas">Puissance</span></div><p class="exo-desc">Descendre en squat profond, exploser vers le haut en sortant le plus haut possible de l'eau.</p><div class="variables"><strong>Variables :</strong> squat → demi-squat sauté → complet | 10 → 20 rép | 3 séries → 5 | récup 30s → 20s → 10s</div></div>
+      <div class="cat-label">— Abdominaux —</div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Pédalage debout</span><span class="exo-cat cat-abdo">Abdos</span></div><p class="exo-desc">Frite sous les bras, corps à l'horizontale, pédaler en alternance. Gainage du tronc actif.</p><div class="variables"><strong>Variables :</strong> frite → ceinture → sans aide | lent → rapide → inversé | 30s → 60s → 2min | genoux hauts → extension complète</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Relevé de jambes suspendu</span><span class="exo-cat cat-abdo">Abdos</span></div><p class="exo-desc">Dos à la gouttière, bras en appui, monter les deux jambes tendues à l'horizontal puis redescendre.</p><div class="variables"><strong>Variables :</strong> jambes fléchies → tendues | 90° → 120° | 10 → 20 → 30 rép | lent → rythmé | avec rotation (obliques)</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Rotations du tronc avec frite</span><span class="exo-cat cat-abdo">Abdos obliques</span></div><p class="exo-desc">Frite tenue à deux mains devant soi sous l'eau, grandes rotations de droite à gauche.</p><div class="variables"><strong>Variables :</strong> rotation lente → rapide | amplitude faible → totale | frite horizontale → verticale | 30s → 60s → 2min</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Crunch suspendu</span><span class="exo-cat cat-abdo">Abdos</span></div><p class="exo-desc">Dos à la gouttière, relever genoux vers la poitrine en contractant les abdos, descendre lentement.</p><div class="variables"><strong>Variables :</strong> fléchis → tendus | 10 → 20 → 30 rép | lent → rapide | avec rotation (obliques) | 1 bras seul à la gouttière</div></div>
+      <div class="cat-label">— Étirements & relaxation —</div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Étirements en flottaison</span><span class="exo-cat cat-etir">Étirements</span></div><p class="exo-desc">Suspendu à la gouttière, étirer dos, épaules, hanches. Profiter de l'apesanteur de l'eau.</p><div class="variables"><strong>Variables :</strong> jambe tendue → fléchie | bras droit → en croix | 20s → 40s | dos → quadriceps → mollets</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Étoile de mer flottante</span><span class="exo-cat cat-relax">Relaxation</span></div><p class="exo-desc">Décubitus dorsal, bras et jambes écartés, se laisser flotter. Respiration profonde guidée.</p><div class="variables"><strong>Variables :</strong> aide MNS → seul | yeux ouverts → fermés | silence → musique douce | 2 min → 5 min | inspirations 4s/exp 6s</div></div>
+    
+    <div class="custom-exo-zone">
+      <div class="custom-exo-zone-title">✏️ Mes exercices perso</div>
+      <div id="custom-gym-gym-exos"></div>
+      <button class="add-exo-btn" onclick="addCustomExo('gym-gym-exos')">+ Ajouter un exercice</button>
+    </div>
+</div>
+    <div id="gym-gym-playlist" class="section">
+      <h2 class="sh">Playlists Aquagym</h2>
+      <div class="grid2">
+        <div class="info-card"><h3>Échauffement (95–115 bpm)</h3><div class="pl-section"><h4>Titres</h4><div class="track"><div><div class="track-name">Levitating</div><div class="track-artist">Dua Lipa</div></div><span class="track-bpm">103 bpm</span></div><div class="track"><div><div class="track-name">As It Was</div><div class="track-artist">Harry Styles</div></div><span class="track-bpm">115 bpm</span></div><div class="track"><div><div class="track-name">Watermelon Sugar</div><div class="track-artist">Harry Styles</div></div><span class="track-bpm">95 bpm</span></div><div class="track"><div><div class="track-name">Flowers</div><div class="track-artist">Miley Cyrus</div></div><span class="track-bpm">118 bpm</span></div><div class="track"><div><div class="track-name">Golden</div><div class="track-artist">Harry Styles</div></div><span class="track-bpm">100 bpm</span></div></div></div>
+        <div class="info-card"><h3>Cardio (120–135 bpm)</h3><div class="pl-section"><h4>Titres</h4><div class="track"><div><div class="track-name">Don't Start Now</div><div class="track-artist">Dua Lipa</div></div><span class="track-bpm">124 bpm</span></div><div class="track"><div><div class="track-name">Physical</div><div class="track-artist">Dua Lipa</div></div><span class="track-bpm">126 bpm</span></div><div class="track"><div><div class="track-name">Heat Waves</div><div class="track-artist">Glass Animals</div></div><span class="track-bpm">130 bpm</span></div><div class="track"><div><div class="track-name">Uptown Funk</div><div class="track-artist">Bruno Mars</div></div><span class="track-bpm">115 bpm</span></div><div class="track"><div><div class="track-name">Good as Hell</div><div class="track-artist">Lizzo</div></div><span class="track-bpm">96 bpm</span></div></div></div>
+        <div class="info-card"><h3>Renfo / Haut du corps (110–125 bpm)</h3><div class="pl-section"><h4>Titres</h4><div class="track"><div><div class="track-name">Juice</div><div class="track-artist">Lizzo</div></div><span class="track-bpm">120 bpm</span></div><div class="track"><div><div class="track-name">Unstoppable</div><div class="track-artist">Sia</div></div><span class="track-bpm">103 bpm</span></div><div class="track"><div><div class="track-name">Rain On Me</div><div class="track-artist">Lady Gaga & Ariana Grande</div></div><span class="track-bpm">124 bpm</span></div><div class="track"><div><div class="track-name">Run the World</div><div class="track-artist">Beyoncé</div></div><span class="track-bpm">129 bpm</span></div></div></div>
+        <div class="info-card"><h3>Relaxation (60–80 bpm)</h3><div class="pl-section"><h4>Titres</h4><div class="track"><div><div class="track-name">Someone Like You</div><div class="track-artist">Adele</div></div><span class="track-bpm">68 bpm</span></div><div class="track"><div><div class="track-name">The Night We Met</div><div class="track-artist">Lord Huron</div></div><span class="track-bpm">75 bpm</span></div><div class="track"><div><div class="track-name">Holocene</div><div class="track-artist">Bon Iver</div></div><span class="track-bpm">74 bpm</span></div><div class="track"><div><div class="track-name">River</div><div class="track-artist">Leon Bridges</div></div><span class="track-bpm">72 bpm</span></div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AQUABIKE -->
+  <div id="gym-bike" class="section">
+    <div class="section-toggle">
+      <button class="toggle-btn active" onclick="toggleGym('bike','exos')">🏋 Exercices</button>
+      <button class="toggle-btn" onclick="toggleGym('bike','playlist')">🎵 Playlists</button>
+    </div>
+    <div id="gym-bike-exos" class="section active">
+      <h2 class="sh">Aquabike — Exercices</h2>
+      <div class="cat-label">— Échauffement —</div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Pédalage libre</span><span class="exo-cat cat-chauf">Échauffement</span></div><p class="exo-desc">Pédaler à rythme libre 5 min, résistance 0–1, pour activer la circulation et s'habituer au vélo immergé.</p><div class="variables"><strong>Variables :</strong> résistance 0 → 1 → 2 | 60 rpm → 80 → 100 | assis → debout intermittent | bras guidon → bras tendus</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Pédalage inversé</span><span class="exo-cat cat-chauf">Mobilité</span></div><p class="exo-desc">Pédaler en marche arrière pour activer les ischios-jambiers et changer les chaînes musculaires.</p><div class="variables"><strong>Variables :</strong> 30s → 1min | lent → rapide | résistance 0 → 2 | alterner 30s avant / 30s arrière</div></div>
+      <div class="cat-label">— Cardio —</div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Sprints assis</span><span class="exo-cat cat-cardio">Cardio</span></div><p class="exo-desc">20s à fond / 40s récup. Pédalage maximal assis, gainage actif, position stable.</p><div class="variables"><strong>Variables :</strong> 20s/40s → 30s/30s → Tabata | résistance 2 → 4 → 6 | 6 rép → 10 | assis → debout (danseuse)</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Col en danseuse</span><span class="exo-cat cat-cardio">Cardio + Bas du corps</span></div><p class="exo-desc">Debout sur les pédales, simuler une montée de col. Résistance haute, rythme régulier.</p><div class="variables"><strong>Variables :</strong> résistance 4 → 6 → 8 | 1 min → 3 → 5 | assis récup → debout effort | bras guidon → lâchés</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Intervalles pyramidaux</span><span class="exo-cat cat-cardio">Cardio</span></div><p class="exo-desc">1min facile → 1min moyen → 1min dur → 1min max → 1min dur → 1min moyen → 1min facile. Bloc de 7 min.</p><div class="variables"><strong>Variables :</strong> 1 bloc → 2 → 3 | résistance progressive → constante + rpm variable | assis → danseuse aux paliers forts</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Chrono race</span><span class="exo-cat cat-cardio">Compétition</span></div><p class="exo-desc">10 min à fond, noter la distance simulée sur le compteur. Se battre contre son propre record chaque semaine.</p><div class="variables"><strong>Variables :</strong> 5 min → 10 → 20 | résistance constante → progressive | individuel → challenge entre participants</div></div>
+      <div class="cat-label">— Bas du corps —</div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Fessiers ciblés</span><span class="exo-cat cat-bas">Bas du corps</span></div><p class="exo-desc">Pédaler en accentuant la poussée vers le bas à chaque demi-tour, extension de hanche maximale.</p><div class="variables"><strong>Variables :</strong> unilatéral D → G → alterné | cadence lente → rapide | siège reculé → avancé (quadriceps) | 3×30 tours → 5×30</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Pédalage talon-pointe</span><span class="exo-cat cat-bas">Mollets / tibias</span></div><p class="exo-desc">Alterner pédalage sur la pointe des pieds (mollets) et sur les talons (tibias) toutes les 30s.</p><div class="variables"><strong>Variables :</strong> 15s chaque → 30s → 1min | résistance légère → moyenne | avec conscientisation du muscle ciblé</div></div>
+      <div class="cat-label">— Corps entier & récupération —</div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Bras + pédalage</span><span class="exo-cat cat-haut">Corps entier</span></div><p class="exo-desc">Pédaler à rythme moyen en ajoutant des mouvements de bras (boxe, ramer, écartés) pour solliciter le haut du corps.</p><div class="variables"><strong>Variables :</strong> haltères → sans | jabs → ramer → écartés | 30s chaque → 1min | résistance vélo maintenue</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Récupération active</span><span class="exo-cat cat-etir">Étirements</span></div><p class="exo-desc">Pédaler très lentement, mains dans l'eau, résistance 0. Respiration guidée. Étirements de cheville hors vélo.</p><div class="variables"><strong>Variables :</strong> 2 min → 5 min | avec étirements cheville → sans | musique douce | finir par étoile de mer 2min</div></div>
+    
+    <div class="custom-exo-zone">
+      <div class="custom-exo-zone-title">✏️ Mes exercices perso</div>
+      <div id="custom-gym-bike-exos"></div>
+      <button class="add-exo-btn" onclick="addCustomExo('gym-bike-exos')">+ Ajouter un exercice</button>
+    </div>
+</div>
+    <div id="gym-bike-playlist" class="section">
+      <h2 class="sh">Playlists Aquabike</h2>
+      <div class="grid2">
+        <div class="info-card"><h3>Échauffement (90–110 rpm)</h3><div class="pl-section"><h4>Titres</h4><div class="track"><div><div class="track-name">Love Story (Remix)</div><div class="track-artist">Taylor Swift</div></div><span class="track-bpm">110 bpm</span></div><div class="track"><div><div class="track-name">Golden</div><div class="track-artist">Harry Styles</div></div><span class="track-bpm">100 bpm</span></div><div class="track"><div><div class="track-name">Flowers</div><div class="track-artist">Miley Cyrus</div></div><span class="track-bpm">118 bpm</span></div></div></div>
+        <div class="info-card"><h3>Sprints (128–145 bpm)</h3><div class="pl-section"><h4>Titres</h4><div class="track"><div><div class="track-name">Can't Hold Us</div><div class="track-artist">Macklemore</div></div><span class="track-bpm">135 bpm</span></div><div class="track"><div><div class="track-name">Eye of the Tiger</div><div class="track-artist">Survivor</div></div><span class="track-bpm">108 bpm</span></div><div class="track"><div><div class="track-name">Thunderstruck</div><div class="track-artist">AC/DC</div></div><span class="track-bpm">133 bpm</span></div><div class="track"><div><div class="track-name">Stronger</div><div class="track-artist">Kanye West</div></div><span class="track-bpm">100 bpm</span></div></div></div>
+        <div class="info-card"><h3>Col / Endurance (100–120 bpm)</h3><div class="pl-section"><h4>Titres</h4><div class="track"><div><div class="track-name">Pump It</div><div class="track-artist">Black Eyed Peas</div></div><span class="track-bpm">141 bpm</span></div><div class="track"><div><div class="track-name">Till I Collapse</div><div class="track-artist">Eminem</div></div><span class="track-bpm">171 bpm</span></div><div class="track"><div><div class="track-name">Fighter</div><div class="track-artist">Christina Aguilera</div></div><span class="track-bpm">116 bpm</span></div></div></div>
+        <div class="info-card"><h3>Récupération (60–80 bpm)</h3><div class="pl-section"><h4>Titres</h4><div class="track"><div><div class="track-name">The Scientist</div><div class="track-artist">Coldplay</div></div><span class="track-bpm">76 bpm</span></div><div class="track"><div><div class="track-name">Easy</div><div class="track-artist">Son Lux</div></div><span class="track-bpm">75 bpm</span></div><div class="track"><div><div class="track-name">River</div><div class="track-artist">Leon Bridges</div></div><span class="track-bpm">72 bpm</span></div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AQUATRAINING -->
+  <div id="gym-training" class="section">
+    <div class="section-toggle">
+      <button class="toggle-btn active" onclick="toggleGym('training','exos')">🏋 Exercices</button>
+      <button class="toggle-btn" onclick="toggleGym('training','playlist')">🎵 Playlists</button>
+    </div>
+    <div id="gym-training-exos" class="section active">
+      <h2 class="sh">Aquatraining — Exercices</h2>
+      <div class="tip">Format HIIT en eau. Intervalles courts et intenses. Public sportif et adulte confirmé.</div>
+      <div class="cat-label">— Échauffement —</div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Course genoux hauts</span><span class="exo-cat cat-chauf">Échauffement</span></div><p class="exo-desc">Course sur place, genoux montés à la hanche, bras actifs. Progressivité de l'intensité.</p><div class="variables"><strong>Variables :</strong> 50% → 70% → 90% effort | 30s → 60s → 90s | eau mi-cuisses → poitrine | gants palmés → sans</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Mobilisation articulaire</span><span class="exo-cat cat-chauf">Mobilité</span></div><p class="exo-desc">Cercles de chevilles, genoux, hanches, épaules, nuque dans l'eau. Mobilisation complète avant effort intense.</p><div class="variables"><strong>Variables :</strong> 10 cercles chaque articulation | amplitude courte → totale | sens horaire → anti-horaire | 3 min → 5 min</div></div>
+      <div class="cat-label">— Cardio total —</div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Burpees aquatiques</span><span class="exo-cat cat-cardio">Cardio total</span></div><p class="exo-desc">Plonger en position squat, remonter en explosant vers le haut, saut maximal hors de l'eau.</p><div class="variables"><strong>Variables :</strong> sans saut → avec saut → touche plafond | 8 rép → 12 → 16 | 3 séries → 5 | EMOM : 10 rép/min × 8</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Sprints 20m</span><span class="exo-cat cat-cardio">Cardio</span></div><p class="exo-desc">Courir à fond d'un bout à l'autre du couloir. Récupération marche retour.</p><div class="variables"><strong>Variables :</strong> 5 allers → 10 → 15 | récup marche → marche rapide → course lente | gants palmés → sans | chronométré</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Sauts en longueur aquatiques</span><span class="exo-cat cat-cardio">Puissance</span></div><p class="exo-desc">Depuis une position fléchie, sauter le plus loin possible vers l'avant. Enchaîner sans pause.</p><div class="variables"><strong>Variables :</strong> 3 sauts → 5 → 8 → 10 | avec bras → sans | séries 3×5 → 5×5 | distance cible marquée</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Fentes sautées</span><span class="exo-cat cat-cardio">Cardio + bas du corps</span></div><p class="exo-desc">Depuis une fente, sauter pour alterner les jambes en l'air. Atterrissage contrôlé en fente opposée.</p><div class="variables"><strong>Variables :</strong> fente alternée sans saut → avec saut | 10 → 20 rép | 3 séries → 5 | récup 45s → 30s</div></div>
+      <div class="cat-label">— Haut du corps —</div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Traction à la gouttière</span><span class="exo-cat cat-haut">Haut du corps</span></div><p class="exo-desc">Mains à la gouttière, tirer le corps vers le haut (sortir épaules de l'eau), descendre lentement.</p><div class="variables"><strong>Variables :</strong> partiel (30°) → complet | lent → explosif | 3×8 → 4×12 | prise normale → large → serrée</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Pompes sur le bord</span><span class="exo-cat cat-haut">Haut du corps</span></div><p class="exo-desc">Mains sur le bord du bassin, corps dans l'eau, pompes en sortant la poitrine hors de l'eau.</p><div class="variables"><strong>Variables :</strong> amplitude réduite → complète | 3×10 → 4×15 | prise large → serrée | avec saut final explosif</div></div>
+      <div class="cat-label">— Abdominaux —</div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Gainage dynamique à la frite</span><span class="exo-cat cat-abdo">Abdos</span></div><p class="exo-desc">Frite verticale sous les bras, corps à 45°, montée de genoux alternée en maintenant la position.</p><div class="variables"><strong>Variables :</strong> 30s → 60s → 2min | alterné → gauche → droite | lent → rapide | frite → ceinture → sans</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Crunch suspendu</span><span class="exo-cat cat-abdo">Abdos</span></div><p class="exo-desc">Dos à la gouttière, relever genoux vers la poitrine en contractant les abdos, descendre lentement.</p><div class="variables"><strong>Variables :</strong> fléchis → tendus | 10 → 20 → 30 rép | avec rotation (obliques) | 1 bras seul à la gouttière</div></div>
+      <div class="cat-label">— Circuits —</div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Circuit 4 stations</span><span class="exo-cat cat-cardio">Circuit complet</span></div><p class="exo-desc">St.1 : 40s sprints | St.2 : 40s squats sautés | St.3 : 40s gainage frite | St.4 : 40s tractions gouttière. Repos 20s entre stations.</p><div class="variables"><strong>Variables :</strong> 2 tours → 3 → 4 | 30s/30s → 40s/20s → Tabata | noter le total de reps</div></div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">AMRAP 8 minutes</span><span class="exo-cat cat-cardio">Circuit</span></div><p class="exo-desc">10 burpees + 10 squats sautés + 10 crunchs suspendus. Maximum de tours en 8 minutes.</p><div class="variables"><strong>Variables :</strong> 8 min → 10 → 12 | rép 10 → 8 → 6 (plus intensif) | noter le nombre de tours accomplis</div></div>
+      <div class="cat-label">— Relaxation —</div>
+      <div class="exo-card"><div class="exo-header"><span class="exo-title">Relaxation guidée</span><span class="exo-cat cat-relax">Relaxation</span></div><p class="exo-desc">5 min flottaison, guidage voix (inspiration 4s / expiration 6s). Musique douce, éclairage tamisé si possible.</p><div class="variables"><strong>Variables :</strong> avec frite → sans | yeux ouverts → fermés | guidage voix → silence | 3 min → 7 min</div></div>
+    
+    <div class="custom-exo-zone">
+      <div class="custom-exo-zone-title">✏️ Mes exercices perso</div>
+      <div id="custom-gym-training-exos"></div>
+      <button class="add-exo-btn" onclick="addCustomExo('gym-training-exos')">+ Ajouter un exercice</button>
+    </div>
+</div>
+    <div id="gym-training-playlist" class="section">
+      <h2 class="sh">Playlists Aquatraining</h2>
+      <div class="grid2">
+        <div class="info-card"><h3>Warm-up (90–110 bpm)</h3><div class="pl-section"><h4>Titres</h4><div class="track"><div><div class="track-name">Power</div><div class="track-artist">Kanye West</div></div><span class="track-bpm">90 bpm</span></div><div class="track"><div><div class="track-name">Fighter</div><div class="track-artist">Christina Aguilera</div></div><span class="track-bpm">116 bpm</span></div><div class="track"><div><div class="track-name">Run the World</div><div class="track-artist">Beyoncé</div></div><span class="track-bpm">129 bpm</span></div></div></div>
+        <div class="info-card"><h3>HIIT (128–145 bpm)</h3><div class="pl-section"><h4>Titres</h4><div class="track"><div><div class="track-name">Titanium</div><div class="track-artist">David Guetta & Sia</div></div><span class="track-bpm">126 bpm</span></div><div class="track"><div><div class="track-name">Pump It</div><div class="track-artist">Black Eyed Peas</div></div><span class="track-bpm">141 bpm</span></div><div class="track"><div><div class="track-name">Till I Collapse</div><div class="track-artist">Eminem</div></div><span class="track-bpm">171 bpm</span></div><div class="track"><div><div class="track-name">Stronger</div><div class="track-artist">Kanye West</div></div><span class="track-bpm">100 bpm</span></div></div></div>
+        <div class="info-card"><h3>Circuit (115–130 bpm)</h3><div class="pl-section"><h4>Titres</h4><div class="track"><div><div class="track-name">Uptown Funk</div><div class="track-artist">Bruno Mars</div></div><span class="track-bpm">115 bpm</span></div><div class="track"><div><div class="track-name">24K Magic</div><div class="track-artist">Bruno Mars</div></div><span class="track-bpm">120 bpm</span></div><div class="track"><div><div class="track-name">Can't Hold Us</div><div class="track-artist">Macklemore</div></div><span class="track-bpm">135 bpm</span></div></div></div>
+        <div class="info-card"><h3>Cool down (60–80 bpm)</h3><div class="pl-section"><h4>Titres</h4><div class="track"><div><div class="track-name">Breathe (2 AM)</div><div class="track-artist">Anna Nalick</div></div><span class="track-bpm">68 bpm</span></div><div class="track"><div><div class="track-name">River</div><div class="track-artist">Leon Bridges</div></div><span class="track-bpm">72 bpm</span></div><div class="track"><div><div class="track-name">Holocene</div><div class="track-artist">Bon Iver</div></div><span class="track-bpm">~80 bpm</span></div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== DOC 3 : PLANNING ========== -->
+<div id="doc-planning" class="doc-panel">
+  <div class="sub-nav">
+    <button class="sub-tab active" onclick="switchSub('planning','semaine')">📅 Planning semaine</button>
+    <button class="sub-tab" onclick="switchSub('planning','bilan')">📊 Bilan & courses</button>
+    <button class="sub-tab" onclick="switchSub('planning','notes')">💬 Notes à deux</button>
+  </div>
+
+  <div id="plan-semaine" class="section active" style="padding-top:4px">
+    <div class="week-nav">
+      <button class="wnav-btn" onclick="prevWeek()">← Semaine précédente</button>
+      <span class="week-label" id="week-label"></span>
+      <button class="wnav-btn" onclick="nextWeek()">Semaine suivante →</button>
+      <span style="font-size:12px;color:#bbb;margin-left:auto">Sem. <span id="week-num"></span>/<span id="week-total"></span></span>
+    </div>
+    <div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;align-items:center">
+      <span style="font-size:12px;background:#dbeafe;color:#1d4ed8;padding:2px 10px;border-radius:6px;font-weight:700">B = Bleuenn</span>
+      <span style="font-size:12px;background:#fce7f3;color:#9d174d;padding:2px 10px;border-radius:6px;font-weight:700">L = Louan</span>
+      <span style="font-size:12px;color:#bbb">— Clique dans n'importe quelle cellule pour écrire</span>
+    </div>
+    <div class="planning-container">
+      <div style="min-width:700px">
+        <div class="plan-header">
+          <div class="ph-label" style="font-size:10px;color:#ccc"></div>
+          <div class="ph-day">Lun</div><div class="ph-day">Mar</div><div class="ph-day">Mer</div>
+          <div class="ph-day">Jeu</div><div class="ph-day">Ven</div><div class="ph-day">Sam</div><div class="ph-day">Dim</div>
+        </div>
+        <div id="dates-row" class="plan-header" style="margin-bottom:8px"></div>
+
+        <!-- Horaires de travail -->
+        <div style="font-size:11px;color:#aaa;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px;padding-left:4px">🏊 Horaires de travail</div>
+        <div class="person-row-label">
+          <div class="pr-tag pr-b">Bleuenn</div>
+          <div class="day-cell" style="min-height:40px"><input class="work-input" placeholder="ex: 8h–13h" oninput="saveCell('wb0',this.value)" id="wb0i"></div>
+          <div class="day-cell" style="min-height:40px"><input class="work-input" placeholder="ex: 8h–13h" oninput="saveCell('wb1',this.value)" id="wb1i"></div>
+          <div class="day-cell" style="min-height:40px"><input class="work-input" placeholder="ex: 8h–13h" oninput="saveCell('wb2',this.value)" id="wb2i"></div>
+          <div class="day-cell" style="min-height:40px"><input class="work-input" placeholder="ex: 8h–13h" oninput="saveCell('wb3',this.value)" id="wb3i"></div>
+          <div class="day-cell" style="min-height:40px"><input class="work-input" placeholder="ex: 8h–13h" oninput="saveCell('wb4',this.value)" id="wb4i"></div>
+          <div class="day-cell" style="min-height:40px"><input class="work-input" placeholder="ex: 8h–13h" oninput="saveCell('wb5',this.value)" id="wb5i"></div>
+          <div class="day-cell" style="min-height:40px"><input class="work-input" placeholder="ex: 8h–13h" oninput="saveCell('wb6',this.value)" id="wb6i"></div>
+        </div>
+        <div class="person-row-label" style="margin-bottom:10px">
+          <div class="pr-tag pr-l">Louan</div>
+          <div class="day-cell" style="min-height:40px"><input class="work-input work-input-l" placeholder="ex: 13h–18h" oninput="saveCell('wl0',this.value)" id="wl0i"></div>
+          <div class="day-cell" style="min-height:40px"><input class="work-input work-input-l" placeholder="ex: 13h–18h" oninput="saveCell('wl1',this.value)" id="wl1i"></div>
+          <div class="day-cell" style="min-height:40px"><input class="work-input work-input-l" placeholder="ex: 13h–18h" oninput="saveCell('wl2',this.value)" id="wl2i"></div>
+          <div class="day-cell" style="min-height:40px"><input class="work-input work-input-l" placeholder="ex: 13h–18h" oninput="saveCell('wl3',this.value)" id="wl3i"></div>
+          <div class="day-cell" style="min-height:40px"><input class="work-input work-input-l" placeholder="ex: 13h–18h" oninput="saveCell('wl4',this.value)" id="wl4i"></div>
+          <div class="day-cell" style="min-height:40px"><input class="work-input work-input-l" placeholder="ex: 13h–18h" oninput="saveCell('wl5',this.value)" id="wl5i"></div>
+          <div class="day-cell" style="min-height:40px"><input class="work-input work-input-l" placeholder="ex: 13h–18h" oninput="saveCell('wl6',this.value)" id="wl6i"></div>
+        </div>
+
+        <!-- Entraînements Bleuenn -->
+        <div style="font-size:11px;color:#aaa;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px;padding-left:4px">🏃 Entraînements</div>
+        <div class="person-row-label">
+          <div class="pr-tag pr-b">Bleuenn</div>
+          <div class="day-cell"><div class="cell-section">Séance</div><textarea class="cell-input" rows="2" placeholder="type, durée…" oninput="saveCell('bs0',this.value)" id="bs0i"></textarea><div class="cell-section">Ressenti</div><textarea class="cell-input" rows="1" placeholder="notes…" oninput="saveCell('br0',this.value)" id="br0i"></textarea></div>
+          <div class="day-cell"><div class="cell-section">Séance</div><textarea class="cell-input" rows="2" placeholder="type, durée…" oninput="saveCell('bs1',this.value)" id="bs1i"></textarea><div class="cell-section">Ressenti</div><textarea class="cell-input" rows="1" placeholder="notes…" oninput="saveCell('br1',this.value)" id="br1i"></textarea></div>
+          <div class="day-cell"><div class="cell-section">Séance</div><textarea class="cell-input" rows="2" placeholder="type, durée…" oninput="saveCell('bs2',this.value)" id="bs2i"></textarea><div class="cell-section">Ressenti</div><textarea class="cell-input" rows="1" placeholder="notes…" oninput="saveCell('br2',this.value)" id="br2i"></textarea></div>
+          <div class="day-cell"><div class="cell-section">Séance</div><textarea class="cell-input" rows="2" placeholder="type, durée…" oninput="saveCell('bs3',this.value)" id="bs3i"></textarea><div class="cell-section">Ressenti</div><textarea class="cell-input" rows="1" placeholder="notes…" oninput="saveCell('br3',this.value)" id="br3i"></textarea></div>
+          <div class="day-cell"><div class="cell-section">Séance</div><textarea class="cell-input" rows="2" placeholder="type, durée…" oninput="saveCell('bs4',this.value)" id="bs4i"></textarea><div class="cell-section">Ressenti</div><textarea class="cell-input" rows="1" placeholder="notes…" oninput="saveCell('br4',this.value)" id="br4i"></textarea></div>
+          <div class="day-cell"><div class="cell-section">Séance</div><textarea class="cell-input" rows="2" placeholder="type, durée…" oninput="saveCell('bs5',this.value)" id="bs5i"></textarea><div class="cell-section">Ressenti</div><textarea class="cell-input" rows="1" placeholder="notes…" oninput="saveCell('br5',this.value)" id="br5i"></textarea></div>
+          <div class="day-cell"><div class="cell-section">Séance</div><textarea class="cell-input" rows="2" placeholder="type, durée…" oninput="saveCell('bs6',this.value)" id="bs6i"></textarea><div class="cell-section">Ressenti</div><textarea class="cell-input" rows="1" placeholder="notes…" oninput="saveCell('br6',this.value)" id="br6i"></textarea></div>
+        </div>
+        <div class="person-row-label" style="margin-bottom:10px">
+          <div class="pr-tag pr-l">Louan</div>
+          <div class="day-cell"><div class="cell-section">Séance</div><textarea class="cell-input" rows="2" placeholder="type, durée…" oninput="saveCell('ls0',this.value)" id="ls0i"></textarea><div class="cell-section">Ressenti</div><textarea class="cell-input" rows="1" placeholder="notes…" oninput="saveCell('lr0',this.value)" id="lr0i"></textarea></div>
+          <div class="day-cell"><div class="cell-section">Séance</div><textarea class="cell-input" rows="2" placeholder="type, durée…" oninput="saveCell('ls1',this.value)" id="ls1i"></textarea><div class="cell-section">Ressenti</div><textarea class="cell-input" rows="1" placeholder="notes…" oninput="saveCell('lr1',this.value)" id="lr1i"></textarea></div>
+          <div class="day-cell"><div class="cell-section">Séance</div><textarea class="cell-input" rows="2" placeholder="type, durée…" oninput="saveCell('ls2',this.value)" id="ls2i"></textarea><div class="cell-section">Ressenti</div><textarea class="cell-input" rows="1" placeholder="notes…" oninput="saveCell('lr2',this.value)" id="lr2i"></textarea></div>
+          <div class="day-cell"><div class="cell-section">Séance</div><textarea class="cell-input" rows="2" placeholder="type, durée…" oninput="saveCell('ls3',this.value)" id="ls3i"></textarea><div class="cell-section">Ressenti</div><textarea class="cell-input" rows="1" placeholder="notes…" oninput="saveCell('lr3',this.value)" id="lr3i"></textarea></div>
+          <div class="day-cell"><div class="cell-section">Séance</div><textarea class="cell-input" rows="2" placeholder="type, durée…" oninput="saveCell('ls4',this.value)" id="ls4i"></textarea><div class="cell-section">Ressenti</div><textarea class="cell-input" rows="1" placeholder="notes…" oninput="saveCell('lr4',this.value)" id="lr4i"></textarea></div>
+          <div class="day-cell"><div class="cell-section">Séance</div><textarea class="cell-input" rows="2" placeholder="type, durée…" oninput="saveCell('ls5',this.value)" id="ls5i"></textarea><div class="cell-section">Ressenti</div><textarea class="cell-input" rows="1" placeholder="notes…" oninput="saveCell('lr5',this.value)" id="lr5i"></textarea></div>
+          <div class="day-cell"><div class="cell-section">Séance</div><textarea class="cell-input" rows="2" placeholder="type, durée…" oninput="saveCell('ls6',this.value)" id="ls6i"></textarea><div class="cell-section">Ressenti</div><textarea class="cell-input" rows="1" placeholder="notes…" oninput="saveCell('lr6',this.value)" id="lr6i"></textarea></div>
+        </div>
+
+        <!-- Repas -->
+        <div style="font-size:11px;color:#aaa;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px;padding-left:4px">🍽️ Repas</div>
+        <div class="person-row-label">
+          <div class="pr-tag" style="background:#fffbf0;color:#854F0B;font-size:10px">Midi / Soir</div>
+          <div class="day-cell" style="min-height:55px"><div class="cell-section">Midi</div><input class="meal-input" placeholder="repas…" oninput="saveCell('mm0',this.value)" id="mm0i"><div class="cell-section">Soir</div><input class="meal-input" placeholder="repas…" oninput="saveCell('ms0',this.value)" id="ms0i"></div>
+          <div class="day-cell" style="min-height:55px"><div class="cell-section">Midi</div><input class="meal-input" placeholder="repas…" oninput="saveCell('mm1',this.value)" id="mm1i"><div class="cell-section">Soir</div><input class="meal-input" placeholder="repas…" oninput="saveCell('ms1',this.value)" id="ms1i"></div>
+          <div class="day-cell" style="min-height:55px"><div class="cell-section">Midi</div><input class="meal-input" placeholder="repas…" oninput="saveCell('mm2',this.value)" id="mm2i"><div class="cell-section">Soir</div><input class="meal-input" placeholder="repas…" oninput="saveCell('ms2',this.value)" id="ms2i"></div>
+          <div class="day-cell" style="min-height:55px"><div class="cell-section">Midi</div><input class="meal-input" placeholder="repas…" oninput="saveCell('mm3',this.value)" id="mm3i"><div class="cell-section">Soir</div><input class="meal-input" placeholder="repas…" oninput="saveCell('ms3',this.value)" id="ms3i"></div>
+          <div class="day-cell" style="min-height:55px"><div class="cell-section">Midi</div><input class="meal-input" placeholder="repas…" oninput="saveCell('mm4',this.value)" id="mm4i"><div class="cell-section">Soir</div><input class="meal-input" placeholder="repas…" oninput="saveCell('ms4',this.value)" id="ms4i"></div>
+          <div class="day-cell" style="min-height:55px"><div class="cell-section">Midi</div><input class="meal-input" placeholder="repas…" oninput="saveCell('mm5',this.value)" id="mm5i"><div class="cell-section">Soir</div><input class="meal-input" placeholder="repas…" oninput="saveCell('ms5',this.value)" id="ms5i"></div>
+          <div class="day-cell" style="min-height:55px"><div class="cell-section">Midi</div><input class="meal-input" placeholder="repas…" oninput="saveCell('mm6',this.value)" id="mm6i"><div class="cell-section">Soir</div><input class="meal-input" placeholder="repas…" oninput="saveCell('ms6',this.value)" id="ms6i"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BILAN & COURSES -->
+  <div id="plan-bilan" class="section">
+    <h2 class="sh">Bilan hebdo & Liste de courses</h2>
+    <div class="bilan-grid">
+      <div class="bilan-card">
+        <div class="bilan-title">📊 Bilan sport de la semaine</div>
+        <div class="stat-row"><span>Bleuenn — heures entraînement</span><input style="width:70px;text-align:right;border:1px solid #e0e0e0;border-radius:6px;padding:2px 6px;font-family:inherit;font-size:13px;font-weight:700;color:#1d4ed8" placeholder="0h"></div>
+        <div class="stat-row"><span>Louan — heures entraînement</span><input style="width:70px;text-align:right;border:1px solid #e0e0e0;border-radius:6px;padding:2px 6px;font-family:inherit;font-size:13px;font-weight:700;color:#9d174d" placeholder="0h"></div>
+        <div class="stat-row"><span>Séances manquées</span><input style="width:70px;text-align:right;border:1px solid #e0e0e0;border-radius:6px;padding:2px 6px;font-family:inherit;font-size:13px" placeholder="0"></div>
+        <div class="stat-row"><span>Ressenti général (1–10)</span><input style="width:70px;text-align:right;border:1px solid #e0e0e0;border-radius:6px;padding:2px 6px;font-family:inherit;font-size:13px" placeholder="—"></div>
+        <div class="stat-row"><span>Objectif semaine suivante</span><input style="width:120px;text-align:right;border:1px solid #e0e0e0;border-radius:6px;padding:2px 6px;font-family:inherit;font-size:13px" placeholder="ex: +1h"></div>
+      </div>
+      <div class="bilan-card">
+        <div class="bilan-title">💡 Ce qu'on retient de la semaine</div>
+        <textarea class="notes-area" style="min-height:130px" placeholder="Points positifs, difficultés, apprentissages, idées pour améliorer la semaine suivante…"></textarea>
+      </div>
+    </div>
+    <div class="bilan-card" style="margin-bottom:16px">
+      <div class="bilan-title">🍽️ Menu de la semaine prochaine</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-top:8px">
+        <div><label style="font-size:11px;color:#888;font-weight:700;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:3px">Lundi</label><textarea class="notes-area" style="min-height:50px" placeholder="menu…"></textarea></div>
+        <div><label style="font-size:11px;color:#888;font-weight:700;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:3px">Mardi</label><textarea class="notes-area" style="min-height:50px" placeholder="menu…"></textarea></div>
+        <div><label style="font-size:11px;color:#888;font-weight:700;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:3px">Mercredi</label><textarea class="notes-area" style="min-height:50px" placeholder="menu…"></textarea></div>
+        <div><label style="font-size:11px;color:#888;font-weight:700;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:3px">Jeudi</label><textarea class="notes-area" style="min-height:50px" placeholder="menu…"></textarea></div>
+        <div><label style="font-size:11px;color:#888;font-weight:700;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:3px">Vendredi</label><textarea class="notes-area" style="min-height:50px" placeholder="menu…"></textarea></div>
+        <div><label style="font-size:11px;color:#888;font-weight:700;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:3px">Samedi</label><textarea class="notes-area" style="min-height:50px" placeholder="menu…"></textarea></div>
+        <div><label style="font-size:11px;color:#888;font-weight:700;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:3px">Dimanche</label><textarea class="notes-area" style="min-height:50px" placeholder="menu…"></textarea></div>
+      </div>
+    </div>
+    <div class="bilan-card">
+      <div class="bilan-title">🛒 Liste de courses — semaine suivante</div>
+      <p style="font-size:12px;color:#bbb;margin-bottom:10px">Coche au fur et à mesure des achats</p>
+      <div class="courses-grid" id="courses-list"></div>
+      <div class="add-row">
+        <input class="add-input" id="new-course" placeholder="Ajouter un article…" onkeydown="if(event.key==='Enter')addCourse()">
+        <button class="add-btn" onclick="addCourse()">+ Ajouter</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- NOTES À DEUX -->
+  <div id="plan-notes" class="section">
+    <h2 class="sh">Notes à deux ☀️</h2>
+    <div class="tip">Un espace pour tout noter : sorties, objectifs, envies, choses à changer la semaine prochaine.</div>
+    <div class="grid2" style="margin-bottom:14px">
+      <div class="info-card"><h3>Idées activités Jura</h3><ul><li>Randonnée au lac de Chalain</li><li>Vélo — boucle des Belvédères (~80 km)</li><li>Cascade du Hérisson à vélo + baignade</li><li>Grottes de Baume-les-Messieurs</li><li>Bivouac forêt du Massacre</li><li>Trail dans le Massif du Jura</li></ul></div>
+      <div class="info-card"><h3>Conseils nutrition triathlon</h3><ul><li>1,6–2g protéines / kg / jour</li><li>Glucides complexes avant séances longues</li><li>Récupération : protéines dans les 30 min post-séance</li><li>Hydratation : 500 ml/h minimum à l'effort</li><li>Éviter les graisses la veille d'une séance matinale</li></ul></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+      <div><p style="font-size:13px;font-weight:700;margin-bottom:6px">💬 Notes libres</p><textarea class="notes-area" style="height:160px" placeholder="Vos idées, envies, réflexions…"></textarea></div>
+      <div><p style="font-size:13px;font-weight:700;margin-bottom:6px">🎯 Objectifs de l'été</p><textarea class="notes-area" style="height:160px" placeholder="ex : top 10 à la rentrée, nager 5km non-stop, finir une course de triath…"></textarea></div>
+      <div style="grid-column:1/-1"><p style="font-size:13px;font-weight:700;margin-bottom:6px">🔄 À changer la semaine prochaine</p><textarea class="notes-area" style="height:90px" placeholder="ex : se lever 30 min plus tôt le mardi, revoir les repas du soir, ajouter une séance vélo…"></textarea></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== NAVIGATION =====
+function switchDoc(doc){
+  ['natation','aquagym','planning'].forEach(d=>{
+    document.querySelector(`.main-btn[onclick="switchDoc('${d}')"]`).classList.toggle('active',d===doc);
+    document.getElementById('doc-'+d).classList.toggle('active',d===doc);
+  });
+}
+function switchSub(doc,sub){
+  const map={natation:['bebes','aisance','apprentissage','perfectionnement','fiches'],aquagym:['gym','bike','training'],planning:['semaine','bilan','notes']};
+  const prefix={natation:'nat-',aquagym:'gym-',planning:'plan-'};
+  map[doc].forEach(s=>{
+    const btn=document.querySelector(`#doc-${doc} .sub-tab[onclick="switchSub('${doc}','${s}')"]`);
+    const panel=document.getElementById(prefix[doc]+s);
+    if(btn)btn.classList.toggle('active',s===sub);
+    if(panel)panel.classList.toggle('active',s===sub);
+  });
+}
+function toggleNat(g,s){
+  const c=document.getElementById('nat-'+g+'-cours'),e=document.getElementById('nat-'+g+'-exos');
+  document.querySelectorAll('#nat-'+g+' .toggle-btn').forEach((b,i)=>b.classList.toggle('active',i===(s==='cours'?0:1)));
+  c.classList.toggle('active',s==='cours'); e.classList.toggle('active',s==='exos');
+}
+function toggleGym(g,s){
+  const e=document.getElementById('gym-'+g+'-exos'),p=document.getElementById('gym-'+g+'-playlist');
+  document.querySelectorAll('#gym-'+g+' .toggle-btn').forEach((b,i)=>b.classList.toggle('active',i===(s==='exos'?0:1)));
+  e.classList.toggle('active',s==='exos'); p.classList.toggle('active',s==='playlist');
+}
+
+// ===== FICHES =====
+function addFiche(){
+  const c=document.getElementById('fiches-container');
+  const d=document.createElement('div');d.className='fiche-eleve';
+  d.innerHTML=`<div class="fiche-header"><div><span style="font-size:14px;font-weight:700">Nouvel élève</span><span class="badge b-age" style="margin-left:8px">Non défini</span></div><button onclick="this.closest('.fiche-eleve').remove()" style="background:none;border:none;cursor:pointer;color:#ccc;font-size:20px;line-height:1">×</button></div><div class="fiche-body"><div class="fiche-field"><label>Prénom</label><input type="text" placeholder="Prénom"></div><div class="fiche-field"><label>Âge</label><input type="text" placeholder="ex: 8 ans"></div><div class="fiche-field"><label>Groupe</label><select><option>Bébés nageurs</option><option>Aisance aquatique</option><option>Apprentissage</option><option>Perfectionnement</option></select></div><div class="fiche-field"><label>Niveau (1–5)</label><input type="range" min="1" max="5" value="3" style="width:100%"></div><div class="fiche-field full"><label>Points forts</label><textarea placeholder="ex: bonne aisance en eau, bons battements…"></textarea></div><div class="fiche-field full"><label>Points à travailler</label><textarea placeholder="ex: coordination bras/jambes, souffle…"></textarea></div><div class="fiche-field full"><label>Objectif de la semaine</label><textarea placeholder="ex: réussir 25m crawl avec respiration"></textarea></div></div>`;
+  c.appendChild(d);
+}
+
+// ===== PLANNING =====
+const WEEKS=[];
+let d=new Date(2026,6,1);
+while(d<=new Date(2026,7,31)){
+  const day=d.getDay(),mon=new Date(d);
+  mon.setDate(d.getDate()-(day===0?6:day-1));
+  const key=mon.toISOString().split('T')[0];
+  if(!WEEKS.find(w=>w.key===key))WEEKS.push({key,monday:new Date(mon)});
+  d.setDate(d.getDate()+7);
+}
+let weekIdx=0;
+const KEYS_WORK_B=['wb0','wb1','wb2','wb3','wb4','wb5','wb6'];
+const KEYS_WORK_L=['wl0','wl1','wl2','wl3','wl4','wl5','wl6'];
+const KEYS_BS=['bs0','bs1','bs2','bs3','bs4','bs5','bs6'];
+const KEYS_BR=['br0','br1','br2','br3','br4','br5','br6'];
+const KEYS_LS=['ls0','ls1','ls2','ls3','ls4','ls5','ls6'];
+const KEYS_LR=['lr0','lr1','lr2','lr3','lr4','lr5','lr6'];
+const KEYS_MM=['mm0','mm1','mm2','mm3','mm4','mm5','mm6'];
+const KEYS_MS=['ms0','ms1','ms2','ms3','ms4','ms5','ms6'];
+const ALL_KEYS=[...KEYS_WORK_B,...KEYS_WORK_L,...KEYS_BS,...KEYS_BR,...KEYS_LS,...KEYS_LR,...KEYS_MM,...KEYS_MS];
+
+function getStore(){try{return JSON.parse(localStorage.getItem('aquapro2')||'{}')}catch(e){return{}}}
+function saveCell(key,val){const wk=WEEKS[weekIdx].key;const s=getStore();if(!s[wk])s[wk]={};s[wk][key]=val;try{localStorage.setItem('aquapro2',JSON.stringify(s))}catch(e){}}
+
+function renderWeekDates(){
+  const mon=WEEKS[weekIdx].monday;
+  const sun=new Date(mon);sun.setDate(mon.getDate()+6);
+  const fmt=d=>`${d.getDate()}/${d.getMonth()+1}`;
+  document.getElementById('week-label').textContent=`Semaine du ${fmt(mon)} au ${fmt(sun)} 2026`;
+  document.getElementById('week-num').textContent=weekIdx+1;
+  document.getElementById('week-total').textContent=WEEKS.length;
+  const row=document.getElementById('dates-row');
+  row.innerHTML='<div></div>';
+  for(let i=0;i<7;i++){const day=new Date(mon);day.setDate(mon.getDate()+i);row.innerHTML+=`<div class="ph-day" style="font-size:10px;color:#aaa;background:transparent">${fmt(day)}</div>`;}
+  loadWeek();
+}
+function loadWeek(){
+  const wk=WEEKS[weekIdx].key;
+  const data=(getStore()[wk])||{};
+  if(window.listenWeek)window.listenWeek(WEEKS[weekIdx].key);
+}
+function prevWeek(){if(weekIdx>0){weekIdx--;renderWeekDates();if(window.listenWeek)window.listenWeek(WEEKS[weekIdx].key);}}
+function nextWeek(){if(weekIdx<WEEKS.length-1){weekIdx++;renderWeekDates();if(window.listenWeek)window.listenWeek(WEEKS[weekIdx].key);}}
+
+// ===== COURSES =====
+const defaultCourses=['Pâtes (500g)','Riz (1kg)','Poulet filets (1kg)','Saumon (4 pavés)','Thon en boîte ×4','Œufs (12)','Quinoa (500g)','Patates douces (1kg)','Légumes frais (vrac)','Fromage blanc ×4','Fruits (bananes, pommes)','Pain de mie complet','Avoine / muesli','Sauce tomate ×2','Huile d\'olive','Eau (pack ×6)','Yaourts nature ×8','Lentilles / légumineuses'];
+function renderCourses(){
+  const list=document.getElementById('courses-list');if(!list)return;
+  list.innerHTML=defaultCourses.map(c=>`<div class="course-item" onclick="toggleCourse(this)"><input type="checkbox" onclick="event.stopPropagation();this.closest('.course-item').classList.toggle('checked',this.checked)"> ${c}</div>`).join('');
+}
+function toggleCourse(el){const cb=el.querySelector('input');cb.checked=!cb.checked;el.classList.toggle('checked',cb.checked);}
+function addCourse(){
+  const inp=document.getElementById('new-course');
+  const val=inp.value.trim();if(!val)return;
+  const list=document.getElementById('courses-list');
+  const div=document.createElement('div');div.className='course-item';
+  div.onclick=function(){toggleCourse(this);};
+  div.innerHTML=`<input type="checkbox" onclick="event.stopPropagation();this.closest('.course-item').classList.toggle('checked',this.checked)"> ${val}`;
+  list.appendChild(div);inp.value='';
+}
+
+
+function addCustomExoData(zoneId, data={}) {
+  const container = document.getElementById('custom-' + zoneId);
+  const card = document.createElement('div');
+  card.className = 'custom-exo-card';
+  card.innerHTML = `
+    <button class="del-exo-btn" onclick="this.closest('.custom-exo-card').remove();if(window.saveCustomExos)window.saveCustomExos('${zoneId}')">×</button>
+    <div class="exo-row">
+      <div><label>Nom de l'exercice</label><input type="text" placeholder="ex: Crawl une main…" value="${(data.name||'').replace(/"/g,'&quot;')}"></div>
+      <div><label>Catégorie</label><select>
+        <option value="cat-tech">Technique</option>
+        <option value="cat-deco">Découverte</option>
+        <option value="cat-coord">Coordination</option>
+        <option value="cat-endo">Endurance</option>
+        <option value="cat-vit">Vitesse</option>
+        <option value="cat-cardio">Cardio</option>
+        <option value="cat-haut">Haut du corps</option>
+        <option value="cat-bas">Bas du corps</option>
+        <option value="cat-abdo">Abdos</option>
+        <option value="cat-etir">Étirements</option>
+        <option value="cat-relax">Relaxation</option>
+        <option value="cat-chauf">Échauffement</option>
+      </select></div>
+    </div>
+    <label>Description / consigne</label>
+    <textarea placeholder="Décris l'exercice, la posture, les points clés…">${data.desc||''}</textarea>
+    <label>Variables & progressions</label>
+    <textarea placeholder="ex: avec planche → sans planche | 25m → 50m → 100m">${data.vars||''}</textarea>
+  `;
+  // Set select value
+  card.querySelector('select').value = data.cat || 'cat-tech';
+  // Auto-save on change
+  card.querySelectorAll('input,textarea,select').forEach(el => {
+    el.addEventListener('change', () => { if(window.saveCustomExos) window.saveCustomExos(zoneId); });
+    el.addEventListener('blur', () => { if(window.saveCustomExos) window.saveCustomExos(zoneId); });
+  });
+  container.appendChild(card);
+}
+
+function addCustomExo(zoneId) {
+  addCustomExoData(zoneId, {});
+  if(window.saveCustomExos) window.saveCustomExos(zoneId);
+}
+
+// ===== INIT =====
+renderWeekDates();
+renderCourses();
+</script>
+
+<!-- Firebase SDK -->
+
+</body>
+</html>
+
